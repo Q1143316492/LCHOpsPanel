@@ -1,0 +1,144 @@
+{
+  "name": "lch-ops-panel",
+  "displayName": "LCHOpsPanel",
+  "description": "A VS Code extension for managing workspace configurations with custom paths, documents, executable scripts, and commands in a tree view panel",
+  "version": "0.0.1",
+  "engines": {
+    "vscode": "^1.102.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "lchOpsPanel",
+          "title": "LCH Ops Panel",
+          "icon": "$(tools)"
+        }
+      ]
+    },
+    "views": {
+      "lchOpsPanel": [
+        {
+          "id": "lchOpsPanelView",
+          "name": "Operations Panel",
+          "when": "workspaceFolderCount > 0",
+          "icon": "$(list-tree)"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "lchOpsPanel.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "lchOpsPanel.addItem",
+        "title": "Add Item",
+        "icon": "$(add)"
+      },
+      {
+        "command": "lchOpsPanel.editItem",
+        "title": "Edit Item",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "lchOpsPanel.deleteItem",
+        "title": "Delete Item",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "lchOpsPanel.openFile",
+        "title": "Open File"
+      },
+      {
+        "command": "lchOpsPanel.executeScript",
+        "title": "Execute Script"
+      },
+      {
+        "command": "lchOpsPanel.openInTerminal",
+        "title": "Open in Terminal"
+      },
+      {
+        "command": "lchOpsPanel.executeCommand",
+        "title": "Execute Command"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "lchOpsPanel.refresh",
+          "when": "view == lchOpsPanelView",
+          "group": "navigation"
+        },
+        {
+          "command": "lchOpsPanel.addItem",
+          "when": "view == lchOpsPanelView",
+          "group": "navigation"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "lchOpsPanel.openFile",
+          "when": "view == lchOpsPanelView && viewItem == file",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "lchOpsPanel.executeScript",
+          "when": "view == lchOpsPanelView && viewItem == script",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "lchOpsPanel.openInTerminal",
+          "when": "view == lchOpsPanelView && viewItem == script",
+          "group": "1_actions@2"
+        },
+        {
+          "command": "lchOpsPanel.executeCommand",
+          "when": "view == lchOpsPanelView && viewItem == command",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "lchOpsPanel.editItem",
+          "when": "view == lchOpsPanelView",
+          "group": "2_manage@1"
+        },
+        {
+          "command": "lchOpsPanel.deleteItem",
+          "when": "view == lchOpsPanelView",
+          "group": "2_manage@2"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run package",
+    "compile": "webpack",
+    "watch": "webpack --watch",
+    "package": "webpack --mode production --devtool hidden-source-map",
+    "compile-tests": "tsc -p . --outDir out",
+    "watch-tests": "tsc -p . -w --outDir out",
+    "pretest": "npm run compile-tests && npm run compile && npm run lint",
+    "lint": "eslint src",
+    "test": "vscode-test"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.102.0",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "20.x",
+    "@typescript-eslint/eslint-plugin": "^8.31.1",
+    "@typescript-eslint/parser": "^8.31.1",
+    "eslint": "^9.25.1",
+    "typescript": "^5.8.3",
+    "ts-loader": "^9.5.2",
+    "webpack": "^5.99.7",
+    "webpack-cli": "^6.0.1",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/test-electron": "^2.5.2"
+  }
+}

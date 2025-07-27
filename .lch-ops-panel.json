@@ -1,0 +1,42 @@
+{
+  "categories": [
+    "📁 Files",
+    "💻 Scripts",
+    "📝 Logs",
+    "⚡ Commands"
+  ],
+  "items": [
+    {
+      "id": "example1",
+      "name": "Package.json",
+      "type": "file",
+      "path": "./package.json",
+      "category": "📁 Files",
+      "description": "Project package configuration"
+    },
+    {
+      "id": "example2",
+      "name": "README",
+      "type": "file",
+      "path": "./README.md",
+      "category": "📝 Logs",
+      "description": "Project documentation"
+    },
+    {
+      "id": "example3",
+      "name": "Build Extension",
+      "type": "command",
+      "command": "echo 'npm run compile'",
+      "category": "⚡ Commands",
+      "description": "Compile the extension code"
+    },
+    {
+      "id": "example4",
+      "name": "Run Tests",
+      "type": "command",
+      "command": "echo 'npm test'",
+      "category": "⚡ Commands",
+      "description": "Run the test suite"
+    }
+  ]
+}
