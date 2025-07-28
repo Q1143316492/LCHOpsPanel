@@ -1,5 +1,5 @@
 
-# LCHOpsPanel
+# LCH Ops Panel
 
 A Visual Studio Code extension for managing workspace configurations with a customizable tree view panel.
 
