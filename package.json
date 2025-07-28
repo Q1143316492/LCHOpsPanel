@@ -1,9 +1,10 @@
 {
   "name": "lch-ops-panel",
-  "displayName": "LCHOpsPanel",
+  "displayName": "LCH Ops Panel",
   "publisher": "Weylochen",
   "description": "A VS Code extension for managing workspace configurations with custom paths, documents, executable scripts, and commands in a tree view panel",
   "version": "0.0.1",
+  "icon": "icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/Q1143316492/LCHOpsPanel.git"
