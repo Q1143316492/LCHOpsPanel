@@ -15,10 +15,13 @@ timeout /t 2 /nobreak >nul
 start "gas2-demo" cmd /k "echo Gas Terminal 2 - Ready for monitoring && echo Type 'exit' to close"  
 timeout /t 2 /nobreak >nul
 
+start "gas3-demo" cmd /k "echo Gas Terminal 3 - Ready for monitoring && echo Type 'exit' to close"  
+timeout /t 2 /nobreak >nul
+
 start "gcc1-demo" cmd /k "echo GCC Terminal 1 - Compiler ready && echo Type 'exit' to close"
 timeout /t 2 /nobreak >nul
 
-echo 已启动3个演示终端: gas1-demo, gas2-demo, gcc1-demo
+echo 已启动4个演示终端: gas1-demo, gas2-demo, gas3-demo, gcc1-demo
 echo.
 
 echo 第二步: 等待5秒后自动尝试平铺gas相关终端...
