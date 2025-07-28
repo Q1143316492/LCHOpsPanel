@@ -1,64 +1,92 @@
 
 # LCHOpsPanel
 
-This project is licensed under the terms of the [MIT License](./LICENSE.md).
+A Visual Studio Code extension for managing workspace configurations with a customizable tree view panel.
 
-LCHOpsPanel 是一个 VS Code 插件，提供独立面板，帮助你在工作区内高效管理常用路径、文档、脚本和命令。
+## Features
+- **Category-based Organization**: Items are grouped into categories for clear visual separation:
+  - 📁 Files
+  - 💻 Scripts
+  - 📝 Logs
+  - ⚡ Commands
+- **Quick Access to Files**: Open important files like `package.json` and `README.md` directly from the panel.
+- **Script Execution**: Run scripts (e.g., batch files) with a single click.
+- **Command Runner**: Execute custom commands such as build and test tasks from the panel.
+- **Workspace-specific Configuration**: All items and categories are defined per workspace in `.lch-ops-panel.json`.
 
-## 核心功能
-- 独立活动栏面板，不干扰文件浏览
-- 支持自定义分类（带图标）
-- 文件、脚本、命令一站式管理
-- 所有操作均通过右键菜单，防止误触
-- 配置存储于 `.lch-ops-panel.json`，支持团队共享
+## Example Items
+- **Files**: Quickly open project files.
+- **Scripts**: Run batch or shell scripts.
+- **Commands**: Execute commands like `npm run compile`, `npm test`, or custom echo commands.
 
-## 用法
-1. 点击活动栏的 LCH Ops Panel 图标打开面板
-2. 右上角“+”添加项目（文件/脚本/命令）
-3. 右键项目，选择操作：
-   - 文件：右键“Open File”
-   - 脚本：右键“Execute Script”或“Open in Terminal”
-   - 命令：右键“Execute Command”
+## Configuration
 
-## 配置示例
+Edit the `.lch-ops-panel.json` file in your workspace to customize categories and items.
+
+## Example .lch-ops-panel.json
+
 ```json
 {
-  "categories": ["📁 Files", "💻 Scripts", "📝 Logs", "⚡ Commands"],
+  "categories": [
+    "📁 Files",
+    "💻 Scripts",
+    "📝 Logs",
+    "⚡ Commands"
+  ],
   "items": [
     {
+      "id": "example1",
       "name": "Package.json",
       "type": "file",
       "path": "./package.json",
-      "category": "📁 Files"
+      "category": "📁 Files",
+      "description": "Project package configuration"
     },
     {
-      "name": "Deploy Script",
-      "type": "script",
-      "path": "./scripts/deploy.py",
-      "category": "💻 Scripts"
+      "id": "example2",
+      "name": "README",
+      "type": "file",
+      "path": "./README.md",
+      "category": "📝 Logs",
+      "description": "Project documentation"
     },
     {
+      "id": "test-script-1",
       "name": "Test Script",
       "type": "script",
       "path": "./scripts/test-script.bat",
       "category": "💻 Scripts"
     },
     {
+      "id": "example3",
+      "name": "Build Extension",
+      "type": "command",
+      "command": "echo 'npm run compile'",
+      "category": "⚡ Commands",
+      "description": "Compile the extension code"
+    },
+    {
+      "id": "example4",
       "name": "Run Tests",
       "type": "command",
-      "command": "npm test",
-      "category": "⚡ Commands"
+      "command": "echo 'npm test'",
+      "category": "⚡ Commands",
+      "description": "Run the test suite"
+    },
+    {
+      "name": "test echo",
+      "type": "command",
+      "command": "echo 'test echo'",
+      "description": "test222",
+      "category": "⚡ Commands",
+      "id": "scuudx39j"
     }
   ]
 }
 ```
 
-## 支持类型
-- `type: "file"`    普通文件，右键可打开
-- `type: "script"`  可执行脚本，右键可执行或进终端
-- `type: "command"` 自定义命令，右键可执行
+## Repository
+[https://github.com/Q1143316492/LCHOpsPanel](https://github.com/Q1143316492/LCHOpsPanel)
 
-## 说明
-- 分类名需与 `categories` 数组一致，建议加图标
-- 所有操作均为右键菜单，安全防误触
-- 配置文件可提交到团队仓库共享
+## License
+This project is licensed under the terms of the [MIT License](./LICENSE.md).
