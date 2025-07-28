@@ -3,6 +3,13 @@ import * as path from 'path';
 import { OpsItem, OpsConfig, ConfigManager } from './configManager';
 
 export class OpsTreeItem extends vscode.TreeItem {
+    /**
+     * item.type 可选值说明：
+     *   - 'file'    ：普通文件，右键可“打开文件”
+     *   - 'script'  ：可执行脚本，右键可“执行脚本”或“在终端打开目录”
+     *   - 'command' ：自定义命令，右键可“执行命令”
+     *   - 'category'：分组（自动生成，不建议手动配置）
+     */
     constructor(
         public readonly item: OpsItem,
         public readonly collapsibleState: vscode.TreeItemCollapsibleState
