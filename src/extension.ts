@@ -25,6 +25,10 @@ export function activate(context: vscode.ExtensionContext) {
 
     // Register commands
     const commands = [
+        vscode.commands.registerCommand('lchOpsPanel.refresh', () => {
+            treeDataProvider.refresh();
+        }),
+        
         vscode.commands.registerCommand('lchOpsPanel.addItem', () => {
             commandHandler.addItem();
         }),

@@ -22,7 +22,7 @@
         {
           "id": "lchOpsPanel",
           "title": "LCH Ops Panel",
-          "icon": "$(tools)"
+          "icon": "$(octoface)"
         }
       ]
     },
@@ -36,6 +36,11 @@
       ]
     },
     "commands": [
+      {
+        "command": "lchOpsPanel.refresh",
+        "title": "Refresh",
+        "icon": "$(refresh)"
+      },
       {
         "command": "lchOpsPanel.addItem",
         "title": "Add New Item",
@@ -70,6 +75,11 @@
     ],
     "menus": {
       "view/title": [
+        {
+          "command": "lchOpsPanel.refresh",
+          "when": "view == lchOpsPanelView",
+          "group": "navigation@5"
+        },
         {
           "command": "lchOpsPanel.addItem",
           "when": "view == lchOpsPanelView",

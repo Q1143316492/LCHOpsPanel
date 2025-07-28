@@ -25,10 +25,35 @@ export class ConfigManager {
         const configPath = path.join(workspaceRoot, this.CONFIG_FILE);
         
         try {
+            // 检查文件是否存在
+            await fs.access(configPath);
+            
             const configContent = await fs.readFile(configPath, 'utf8');
-            return JSON.parse(configContent);
+            
+            // 检查文件内容是否为空
+            if (!configContent.trim()) {
+                console.log('Config file is empty, returning default config');
+                return {
+                    categories: ['Files', 'Scripts', 'Commands'],
+                    items: []
+                };
+            }
+            
+            const parsedConfig = JSON.parse(configContent);
+            
+            // 验证配置结构
+            if (!parsedConfig.categories || !Array.isArray(parsedConfig.categories)) {
+                parsedConfig.categories = ['Files', 'Scripts', 'Commands'];
+            }
+            if (!parsedConfig.items || !Array.isArray(parsedConfig.items)) {
+                parsedConfig.items = [];
+            }
+            
+            console.log('Config loaded from file:', configPath);
+            return parsedConfig;
         } catch (error) {
-            // Return default config if file doesn't exist
+            console.log('Error loading config file, returning default config:', error);
+            // Return default config if file doesn't exist or has errors
             return {
                 categories: ['Files', 'Scripts', 'Commands'],
                 items: []

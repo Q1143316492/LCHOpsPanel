@@ -55,11 +55,48 @@ export class OpsTreeDataProvider implements vscode.TreeDataProvider<OpsItem>, vs
     private config: OpsConfig = { categories: [], items: [] };
     private workspaceRoot: string | undefined;
     private fileWatcher: vscode.FileSystemWatcher | undefined;
+    private workspaceFoldersListener: vscode.Disposable | undefined;
+    private isConfigLoaded: boolean = false;
 
     constructor() {
-        this.workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
-        this.loadConfig();
-        this.setupFileWatcher();
+        this.initialize();
+    }
+
+    private async initialize(): Promise<void> {
+        // 监听workspace文件夹变化
+        this.workspaceFoldersListener = vscode.workspace.onDidChangeWorkspaceFolders(async () => {
+            await this.updateWorkspaceRoot();
+        });
+
+        // 初始化workspace root
+        await this.updateWorkspaceRoot();
+    }
+
+    private async updateWorkspaceRoot(): Promise<void> {
+        const newWorkspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+        
+        if (this.workspaceRoot !== newWorkspaceRoot) {
+            // 清理旧的文件监听器
+            if (this.fileWatcher) {
+                this.fileWatcher.dispose();
+                this.fileWatcher = undefined;
+            }
+            
+            this.workspaceRoot = newWorkspaceRoot;
+            
+            if (this.workspaceRoot) {
+                // 加载新的配置
+                await this.loadConfig();
+                this.setupFileWatcher();
+                // 刷新树视图
+                this._onDidChangeTreeData.fire();
+            } else {
+                // 没有workspace时清空配置
+                this.config = { categories: [], items: [] };
+                this.isConfigLoaded = false;
+                this._onDidChangeTreeData.fire();
+            }
+        }
     }
 
     refresh(): void {
@@ -90,15 +127,25 @@ export class OpsTreeDataProvider implements vscode.TreeDataProvider<OpsItem>, vs
         if (this.fileWatcher) {
             this.fileWatcher.dispose();
         }
+        if (this.workspaceFoldersListener) {
+            this.workspaceFoldersListener.dispose();
+        }
     }
 
     private async loadConfig(): Promise<void> {
         if (this.workspaceRoot) {
             try {
                 this.config = await ConfigManager.loadConfig(this.workspaceRoot);
+                this.isConfigLoaded = true;
+                console.log('Config loaded successfully:', this.config);
             } catch (error) {
+                console.error('Error loading config:', error);
                 this.config = { categories: [], items: [] };
+                this.isConfigLoaded = false;
             }
+        } else {
+            this.config = { categories: [], items: [] };
+            this.isConfigLoaded = false;
         }
     }
 
@@ -117,14 +164,25 @@ export class OpsTreeDataProvider implements vscode.TreeDataProvider<OpsItem>, vs
             return Promise.resolve([]);
         }
 
+        // 如果配置还没加载完成，先加载配置
+        if (!this.isConfigLoaded) {
+            return this.loadConfig().then(() => {
+                return this.getChildrenInternal(element);
+            });
+        }
+
+        return Promise.resolve(this.getChildrenInternal(element));
+    }
+
+    private getChildrenInternal(element?: OpsItem): OpsItem[] {
         if (!element) {
             // Root level - show categories and uncategorized items
-            return Promise.resolve(this.getRootItems());
+            return this.getRootItems();
         } else if (element.type === 'category') {
             // Show items in this category
-            return Promise.resolve(this.getItemsInCategory(element.name));
+            return this.getItemsInCategory(element.name);
         } else {
-            return Promise.resolve([]);
+            return [];
         }
     }
 
