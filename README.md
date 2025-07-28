@@ -1,4 +1,7 @@
+
 # LCHOpsPanel
+
+This project is licensed under the terms of the [MIT License](./LICENSE.md).
 
 LCHOpsPanel 是一个 VS Code 插件，提供独立面板，帮助你在工作区内高效管理常用路径、文档、脚本和命令。
 
@@ -32,6 +35,12 @@ LCHOpsPanel 是一个 VS Code 插件，提供独立面板，帮助你在工作�
       "name": "Deploy Script",
       "type": "script",
       "path": "./scripts/deploy.py",
+      "category": "💻 Scripts"
+    },
+    {
+      "name": "Test Script",
+      "type": "script",
+      "path": "./scripts/test-script.bat",
       "category": "💻 Scripts"
     },
     {

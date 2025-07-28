@@ -7,8 +7,8 @@ import { CommandHandler } from './commandHandler';
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-    console.log('LCHOpsPanel extension is now active!');
-
+    console.log('LCHOpsPanel extension activating...');
+    
     // Create the tree data provider
     const treeDataProvider = new OpsTreeDataProvider();
     
@@ -17,16 +17,14 @@ export function activate(context: vscode.ExtensionContext) {
         treeDataProvider: treeDataProvider,
         showCollapseAll: true
     });
+    
+    console.log('Tree view created successfully');
 
     // Create command handler
     const commandHandler = new CommandHandler(treeDataProvider);
 
     // Register commands
     const commands = [
-        vscode.commands.registerCommand('lchOpsPanel.refresh', () => {
-            treeDataProvider.refresh();
-        }),
-        
         vscode.commands.registerCommand('lchOpsPanel.addItem', () => {
             commandHandler.addItem();
         }),
@@ -61,12 +59,17 @@ export function activate(context: vscode.ExtensionContext) {
     
     // Add tree view to subscriptions
     context.subscriptions.push(treeView);
+    
+    // Add tree data provider to subscriptions for proper disposal
+    context.subscriptions.push(treeDataProvider);
 
     // Show welcome message
-    vscode.window.showInformationMessage('LCHOpsPanel is ready! You can now manage your workspace configurations.');
+    vscode.window.showInformationMessage('LCHOpsPanel is ready!');
+    
+    console.log('LCHOpsPanel extension activated successfully!');
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {
-    console.log('LCHOpsPanel extension is deactivated.');
+    // Clean up resources
 }

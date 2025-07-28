@@ -23,6 +23,13 @@
       "description": "Project documentation"
     },
     {
+      "id": "test-script-1",
+      "name": "Test Script",
+      "type": "script",
+      "path": "./scripts/test-script.bat",
+      "category": "💻 Scripts"
+    },
+    {
       "id": "example3",
       "name": "Build Extension",
       "type": "command",
@@ -37,6 +44,14 @@
       "command": "echo 'npm test'",
       "category": "⚡ Commands",
       "description": "Run the test suite"
+    },
+    {
+      "name": "test echo",
+      "type": "command",
+      "command": "echo 'test echo'",
+      "description": "test222",
+      "category": "⚡ Commands",
+      "id": "scuudx39j"
     }
   ]
 }

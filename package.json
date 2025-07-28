@@ -31,20 +31,14 @@
         {
           "id": "lchOpsPanelView",
           "name": "Operations Panel",
-          "when": "workspaceFolderCount > 0",
-          "icon": "$(list-tree)"
+          "when": "workspaceFolderCount > 0"
         }
       ]
     },
     "commands": [
       {
-        "command": "lchOpsPanel.refresh",
-        "title": "Refresh",
-        "icon": "$(refresh)"
-      },
-      {
         "command": "lchOpsPanel.addItem",
-        "title": "Add Item",
+        "title": "Add New Item",
         "icon": "$(add)"
       },
       {
@@ -77,14 +71,9 @@
     "menus": {
       "view/title": [
         {
-          "command": "lchOpsPanel.refresh",
-          "when": "view == lchOpsPanelView",
-          "group": "navigation"
-        },
-        {
           "command": "lchOpsPanel.addItem",
           "when": "view == lchOpsPanelView",
-          "group": "navigation"
+          "group": "navigation@10"
         }
       ],
       "view/item/context": [

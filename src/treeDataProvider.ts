@@ -29,7 +29,12 @@ export class OpsTreeItem extends vscode.TreeItem {
                 break;
             case 'file':
                 this.iconPath = new vscode.ThemeIcon('file');
-                // Remove click command - use right-click menu instead
+                // 左键点击直接打开文件
+                this.command = {
+                    title: 'Open File',
+                    command: 'lchOpsPanel.openFile',
+                    arguments: [item]
+                };
                 break;
             case 'script':
                 this.iconPath = new vscode.ThemeIcon('file-code');
@@ -43,16 +48,18 @@ export class OpsTreeItem extends vscode.TreeItem {
     }
 }
 
-export class OpsTreeDataProvider implements vscode.TreeDataProvider<OpsItem> {
+export class OpsTreeDataProvider implements vscode.TreeDataProvider<OpsItem>, vscode.Disposable {
     private _onDidChangeTreeData: vscode.EventEmitter<OpsItem | undefined | null | void> = new vscode.EventEmitter<OpsItem | undefined | null | void>();
     readonly onDidChangeTreeData: vscode.Event<OpsItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
     private config: OpsConfig = { categories: [], items: [] };
     private workspaceRoot: string | undefined;
+    private fileWatcher: vscode.FileSystemWatcher | undefined;
 
     constructor() {
         this.workspaceRoot = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
         this.loadConfig();
+        this.setupFileWatcher();
     }
 
     refresh(): void {
@@ -60,9 +67,38 @@ export class OpsTreeDataProvider implements vscode.TreeDataProvider<OpsItem> {
         this._onDidChangeTreeData.fire();
     }
 
+    private setupFileWatcher(): void {
+        if (this.workspaceRoot) {
+            const configFile = path.join(this.workspaceRoot, '.lch-ops-panel.json');
+            this.fileWatcher = vscode.workspace.createFileSystemWatcher(configFile);
+            
+            this.fileWatcher.onDidChange(() => {
+                this.refresh();
+            });
+            
+            this.fileWatcher.onDidCreate(() => {
+                this.refresh();
+            });
+            
+            this.fileWatcher.onDidDelete(() => {
+                this.refresh();
+            });
+        }
+    }
+
+    dispose(): void {
+        if (this.fileWatcher) {
+            this.fileWatcher.dispose();
+        }
+    }
+
     private async loadConfig(): Promise<void> {
         if (this.workspaceRoot) {
-            this.config = await ConfigManager.loadConfig(this.workspaceRoot);
+            try {
+                this.config = await ConfigManager.loadConfig(this.workspaceRoot);
+            } catch (error) {
+                this.config = { categories: [], items: [] };
+            }
         }
     }
 
