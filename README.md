@@ -1,35 +1,48 @@
 
 # LCH Ops Panel
 
-A Visual Studio Code extension for managing workspace configurations with a customizable tree view panel.
+A Visual Studio Code extension for managing workspace configurations with dual tree view panels.
 
 ## Features
-- **Category-based Organization**: Items are grouped into categories for clear visual separation:
-  - 📁 Files
-  - 💻 Scripts
-  - 📝 Logs
-  - ⚡ Commands
-- **Quick Access to Files**: Open important files like `package.json` and `README.md` directly from the panel.
-- **Script Execution**: Run scripts (e.g., batch files) with a single click.
-- **Command Runner**: Execute custom commands such as build and test tasks from the panel.
-- **Workspace-specific Configuration**: All items and categories are defined per workspace in `.lch-ops-panel.json`.
 
-## Example Items
-- **Files**: Quickly open project files.
-- **Scripts**: Run batch or shell scripts.
-- **Commands**: Execute commands like `npm run compile`, `npm test`, or custom echo commands.
+### 📋 Dual Panel Design
+- **Operations Panel**: Traditional file/script/command management with categories
+- **Notice Collections**: File collection management with tree structure display
+
+### 🔧 Operations Panel
+- **Category-based Organization**: Items grouped into categories:
+  - 📁 Files: Quick access to important project files
+  - 💻 Scripts: Execute batch/shell scripts with one click
+  - 📝 Logs: Access documentation and log files
+  - ⚡ Commands: Run custom commands and build tasks
+- **Context Actions**: Right-click menus for file operations, script execution, and terminal access
+- **Item Management**: Add, edit, and delete items through UI
+
+### 📚 Notice Collections Panel
+- **File Collections**: Organize related files into named collections
+- **Tree Structure**: Files automatically organized by folder structure
+- **Collection Management**: 
+  - Switch between collections
+  - Create new collections
+  - Edit and delete existing collections
+- **Quick File Access**: Click to open files directly
+
+### ⚙️ Configuration
+- **Per-workspace Settings**: Each workspace maintains its own `.lch-ops-panel.json`
+- **Real-time Updates**: Changes reflect immediately in both panels
+- **Flexible Structure**: Support for relative and absolute file paths
 
 ## Configuration
 
-Edit the `.lch-ops-panel.json` file in your workspace to customize categories and items.
+Edit the `.lch-ops-panel.json` file in your workspace to customize both panels.
 
-## Example .lch-ops-panel.json
+## Example Configuration
 
 ```json
 {
   "categories": [
     "📁 Files",
-    "💻 Scripts",
+    "💻 Scripts", 
     "📝 Logs",
     "⚡ Commands"
   ],
@@ -43,15 +56,7 @@ Edit the `.lch-ops-panel.json` file in your workspace to customize categories an
       "description": "Project package configuration"
     },
     {
-      "id": "example2",
-      "name": "README",
-      "type": "file",
-      "path": "./README.md",
-      "category": "📝 Logs",
-      "description": "Project documentation"
-    },
-    {
-      "id": "test-script-1",
+      "id": "example2", 
       "name": "Test Script",
       "type": "script",
       "path": "./scripts/test-script.bat",
@@ -60,30 +65,46 @@ Edit the `.lch-ops-panel.json` file in your workspace to customize categories an
     {
       "id": "example3",
       "name": "Build Extension",
-      "type": "command",
-      "command": "echo 'npm run compile'",
+      "type": "command", 
+      "command": "npm run compile",
       "category": "⚡ Commands",
       "description": "Compile the extension code"
-    },
+    }
+  ],
+  "currentNoticeName": "Terminal Tiler",
+  "workspaceNotices": [
     {
-      "id": "example4",
-      "name": "Run Tests",
-      "type": "command",
-      "command": "echo 'npm test'",
-      "category": "⚡ Commands",
-      "description": "Run the test suite"
-    },
-    {
-      "name": "test echo",
-      "type": "command",
-      "command": "echo 'test echo'",
-      "description": "test222",
-      "category": "⚡ Commands",
-      "id": "scuudx39j"
+      "name": "Terminal Tiler",
+      "description": "Terminal tiling functionality files",
+      "files": [
+        {
+          "name": "Terminal Tiler Core",
+          "path": "./scripts/tile/terminal_tiler.py",
+          "description": "Main terminal tiling script"
+        },
+        {
+          "name": "Tile README", 
+          "path": "./scripts/tile/README.md",
+          "description": "Documentation for tiling features"
+        }
+      ]
     }
   ]
 }
 ```
+
+## Usage
+
+### Operations Panel
+- **Add Items**: Click the `+` button in the panel toolbar
+- **Edit/Delete**: Right-click on any item for context menu
+- **Execute**: Click files to open, right-click scripts/commands to execute
+
+### Notice Collections Panel  
+- **Switch Collections**: Click the list icon to select active collection
+- **Manage Collections**: Click the gear icon to edit/delete collections
+- **Add Collections**: Click the folder icon to create new collections
+- **Browse Files**: Expand folders and click files to open
 
 ## Repository
 [https://github.com/Q1143316492/LCHOpsPanel](https://github.com/Q1143316492/LCHOpsPanel)
