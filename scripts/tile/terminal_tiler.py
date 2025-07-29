@@ -346,6 +346,7 @@ def main():
   python terminal_tiler.py gas                    # 垂直平铺所有包含'gas'的终端
   python terminal_tiler.py gas --horizontal       # 水平平铺所有包含'gas'的终端
   python terminal_tiler.py --list                 # 列出所有终端窗口
+  python terminal_tiler.py g --hide               # 最小化所有相关终端窗口
   python terminal_tiler.py gcc --gap 10           # 平铺gcc相关终端，窗口间距为10像素
         """
     )
@@ -375,6 +376,11 @@ def main():
         help='列出所有终端窗口'
     )
     
+    parser.add_argument(
+        '--hide',
+        action='store_true',
+        help='隐藏所有扫描到的终端窗口'
+    )
     args = parser.parse_args()
     
     tiler = TerminalTiler()
@@ -399,6 +405,22 @@ def main():
     print(f"找到 {len(windows)} 个匹配的终端窗口:")
     for hwnd, title in windows:
         print(f"  - {title}")
+
+    if args.hide:
+        # 最小化所有扫描到的终端窗口
+        if not HAS_WIN32:
+            print("模拟最小化所有终端窗口")
+            for hwnd, title in windows:
+                print(f"  - 已最小化: {title}")
+        else:
+            for hwnd, title in windows:
+                try:
+                    win32gui.ShowWindow(hwnd, win32con.SW_MINIMIZE)
+                    print(f"已最小化: {title}")
+                except Exception as e:
+                    print(f"最小化窗口 '{title}' 时出错: {e}")
+        print("终端窗口最小化完成!")
+        return
     
     # 平铺窗口
     if args.horizontal:
