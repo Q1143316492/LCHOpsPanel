@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { OpsTreeDataProvider } from './treeDataProvider';
+import { NoticeCollectionProvider } from './noticeCollectionProvider';
 import { CommandHandler } from './commandHandler';
 
 // This method is called when your extension is activated
@@ -9,19 +10,25 @@ import { CommandHandler } from './commandHandler';
 export function activate(context: vscode.ExtensionContext) {
     console.log('LCHOpsPanel extension activating...');
     
-    // Create the tree data provider
+    // Create the tree data providers
     const treeDataProvider = new OpsTreeDataProvider();
+    const noticeCollectionProvider = new NoticeCollectionProvider();
     
-    // Create the tree view
+    // Create the tree views
     const treeView = vscode.window.createTreeView('lchOpsPanelView', {
         treeDataProvider: treeDataProvider,
         showCollapseAll: true
     });
     
-    console.log('Tree view created successfully');
+    const noticeCollectionView = vscode.window.createTreeView('lchNoticeCollectionView', {
+        treeDataProvider: noticeCollectionProvider,
+        showCollapseAll: true
+    });
+    
+    console.log('Tree views created successfully');
 
-    // Create command handler
-    const commandHandler = new CommandHandler(treeDataProvider);
+    // Create command handler - pass both providers
+    const commandHandler = new CommandHandler(treeDataProvider, noticeCollectionProvider);
 
     // Register commands
     const commands = [
@@ -55,17 +62,31 @@ export function activate(context: vscode.ExtensionContext) {
         
         vscode.commands.registerCommand('lchOpsPanel.executeCommand', (item) => {
             commandHandler.executeCommand(item);
+        }),
+        
+        vscode.commands.registerCommand('lchOpsPanel.switchNoticeCollection', () => {
+            commandHandler.switchNoticeCollection();
+        }),
+        
+        vscode.commands.registerCommand('lchOpsPanel.addNoticeCollection', () => {
+            commandHandler.addNoticeCollection();
+        }),
+        
+        vscode.commands.registerCommand('lchOpsPanel.manageNoticeCollections', () => {
+            commandHandler.manageNoticeCollections();
         })
     ];
 
     // Add all commands to subscriptions
     commands.forEach(command => context.subscriptions.push(command));
     
-    // Add tree view to subscriptions
+    // Add tree views to subscriptions
     context.subscriptions.push(treeView);
+    context.subscriptions.push(noticeCollectionView);
     
-    // Add tree data provider to subscriptions for proper disposal
+    // Add tree data providers to subscriptions for proper disposal
     context.subscriptions.push(treeDataProvider);
+    context.subscriptions.push(noticeCollectionProvider);
 
     // Show welcome message
     vscode.window.showInformationMessage('LCHOpsPanel is ready!');

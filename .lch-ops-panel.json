@@ -53,5 +53,65 @@
       "category": "⚡ Commands",
       "id": "scuudx39j"
     }
+  ],
+  "currentNoticeName": "Terminal Tiler",
+  "workspaceNotices": [
+    {
+      "name": "Terminal Tiler",
+      "description": "Terminal tiling functionality files",
+      "files": [
+        {
+          "name": "Terminal Tiler Core",
+          "path": "./scripts/tile/terminal_tiler.py",
+          "description": "Main terminal tiling script"
+        },
+        {
+          "name": "Smart Demo",
+          "path": "./scripts/tile/smart_demo.bat",
+          "description": "Smart tiling demo script"
+        },
+        {
+          "name": "Test Smart Tiling",
+          "path": "./scripts/tile/test_smart_tiling.py",
+          "description": "Unit tests for smart tiling"
+        },
+        {
+          "name": "Tile README",
+          "path": "./scripts/tile/README.md",
+          "description": "Documentation for tiling features"
+        },
+        {
+          "name": "Dependencies Script",
+          "path": "./scripts/tile/install_dependencies.py",
+          "description": "Install required dependencies"
+        },
+        {
+          "name": "Root README",
+          "path": "./README.md",
+          "description": "Documentation for the root directory"
+        }
+      ]
+    },
+    {
+      "name": "Test Scripts",
+      "description": "Testing and development scripts",
+      "files": [
+        {
+          "name": "Test Script",
+          "path": "./scripts/test-script.bat",
+          "description": "Main test script"
+        },
+        {
+          "name": "Project README",
+          "path": "./README.md",
+          "description": "Project documentation"
+        },
+        {
+          "name": "Package Config",
+          "path": "./package.json",
+          "description": "NPM package configuration"
+        }
+      ]
+    }
   ]
 }

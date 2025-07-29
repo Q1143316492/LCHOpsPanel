@@ -1,7 +1,7 @@
 export interface OpsItem {
     id: string;
     name: string;
-    type: 'file' | 'script' | 'command' | 'category';
+    type: 'file' | 'script' | 'command' | 'category' | 'notice-collection' | 'notice-folder' | 'notice-file';
     path?: string;
     command?: string;
     description?: string;
@@ -9,9 +9,23 @@ export interface OpsItem {
     children?: OpsItem[];
 }
 
+export interface NoticeFile {
+    name: string;
+    path: string;
+    description?: string;
+}
+
+export interface WorkspaceNotice {
+    name: string;
+    description?: string;
+    files: NoticeFile[];
+}
+
 export interface OpsConfig {
     categories: string[];
     items: OpsItem[];
+    workspaceNotices?: WorkspaceNotice[];
+    currentNoticeName?: string;
 }
 
 export class ConfigManager {
@@ -35,7 +49,9 @@ export class ConfigManager {
                 console.log('Config file is empty, returning default config');
                 return {
                     categories: ['Files', 'Scripts', 'Commands'],
-                    items: []
+                    items: [],
+                    workspaceNotices: [],
+                    currentNoticeName: ''
                 };
             }
             
@@ -48,6 +64,12 @@ export class ConfigManager {
             if (!parsedConfig.items || !Array.isArray(parsedConfig.items)) {
                 parsedConfig.items = [];
             }
+            if (!parsedConfig.workspaceNotices || !Array.isArray(parsedConfig.workspaceNotices)) {
+                parsedConfig.workspaceNotices = [];
+            }
+            if (!parsedConfig.currentNoticeName) {
+                parsedConfig.currentNoticeName = '';
+            }
             
             console.log('Config loaded from file:', configPath);
             return parsedConfig;
@@ -56,7 +78,9 @@ export class ConfigManager {
             // Return default config if file doesn't exist or has errors
             return {
                 categories: ['Files', 'Scripts', 'Commands'],
-                items: []
+                items: [],
+                workspaceNotices: [],
+                currentNoticeName: ''
             };
         }
     }

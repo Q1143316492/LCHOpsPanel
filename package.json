@@ -33,6 +33,11 @@
           "id": "lchOpsPanelView",
           "name": "Operations Panel",
           "when": "workspaceFolderCount > 0"
+        },
+        {
+          "id": "lchNoticeCollectionView",
+          "name": "Notice Collections",
+          "when": "workspaceFolderCount > 0"
         }
       ]
     },
@@ -72,6 +77,21 @@
       {
         "command": "lchOpsPanel.executeCommand",
         "title": "Execute Command"
+      },
+      {
+        "command": "lchOpsPanel.switchNoticeCollection",
+        "title": "Switch Notice Collection",
+        "icon": "$(list-selection)"
+      },
+      {
+        "command": "lchOpsPanel.addNoticeCollection",
+        "title": "Add Notice Collection",
+        "icon": "$(folder-library)"
+      },
+      {
+        "command": "lchOpsPanel.manageNoticeCollections",
+        "title": "Manage Notice Collections",
+        "icon": "$(settings-gear)"
       }
     ],
     "menus": {
@@ -85,12 +105,32 @@
           "command": "lchOpsPanel.addItem",
           "when": "view == lchOpsPanelView",
           "group": "navigation@10"
+        },
+        {
+          "command": "lchOpsPanel.switchNoticeCollection",
+          "when": "view == lchNoticeCollectionView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "lchOpsPanel.addNoticeCollection",
+          "when": "view == lchNoticeCollectionView",
+          "group": "navigation@2"
+        },
+        {
+          "command": "lchOpsPanel.manageNoticeCollections",
+          "when": "view == lchNoticeCollectionView",
+          "group": "navigation@3"
         }
       ],
       "view/item/context": [
         {
           "command": "lchOpsPanel.openFile",
           "when": "view == lchOpsPanelView && viewItem == file",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "lchOpsPanel.openFile",
+          "when": "view == lchNoticeCollectionView && viewItem == notice-file",
           "group": "1_actions@1"
         },
         {
@@ -110,12 +150,12 @@
         },
         {
           "command": "lchOpsPanel.editItem",
-          "when": "view == lchOpsPanelView",
+          "when": "view == lchOpsPanelView && (viewItem == file || viewItem == script || viewItem == command)",
           "group": "2_manage@1"
         },
         {
           "command": "lchOpsPanel.deleteItem",
-          "when": "view == lchOpsPanelView",
+          "when": "view == lchOpsPanelView && (viewItem == file || viewItem == script || viewItem == command)",
           "group": "2_manage@2"
         }
       ]

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
-import { OpsItem, OpsConfig, ConfigManager } from './configManager';
+import { OpsItem, OpsConfig, ConfigManager, WorkspaceNotice, NoticeFile } from './configManager';
 
 export class OpsTreeItem extends vscode.TreeItem {
     /**
@@ -52,7 +52,7 @@ export class OpsTreeDataProvider implements vscode.TreeDataProvider<OpsItem>, vs
     private _onDidChangeTreeData: vscode.EventEmitter<OpsItem | undefined | null | void> = new vscode.EventEmitter<OpsItem | undefined | null | void>();
     readonly onDidChangeTreeData: vscode.Event<OpsItem | undefined | null | void> = this._onDidChangeTreeData.event;
 
-    private config: OpsConfig = { categories: [], items: [] };
+    private config: OpsConfig = { categories: [], items: [], workspaceNotices: [], currentNoticeName: '' };
     private workspaceRoot: string | undefined;
     private fileWatcher: vscode.FileSystemWatcher | undefined;
     private workspaceFoldersListener: vscode.Disposable | undefined;
@@ -140,18 +140,18 @@ export class OpsTreeDataProvider implements vscode.TreeDataProvider<OpsItem>, vs
                 console.log('Config loaded successfully:', this.config);
             } catch (error) {
                 console.error('Error loading config:', error);
-                this.config = { categories: [], items: [] };
+                this.config = { categories: [], items: [], workspaceNotices: [], currentNoticeName: '' };
                 this.isConfigLoaded = false;
             }
         } else {
-            this.config = { categories: [], items: [] };
+            this.config = { categories: [], items: [], workspaceNotices: [], currentNoticeName: '' };
             this.isConfigLoaded = false;
         }
     }
 
     getTreeItem(element: OpsItem): vscode.TreeItem {
-        const isCategory = element.type === 'category';
-        const collapsibleState = isCategory ? 
+        const hasChildren = element.type === 'category';
+        const collapsibleState = hasChildren ? 
             vscode.TreeItemCollapsibleState.Expanded : 
             vscode.TreeItemCollapsibleState.None;
         

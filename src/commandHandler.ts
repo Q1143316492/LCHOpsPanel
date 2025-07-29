@@ -1,11 +1,15 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { OpsItem } from './configManager';
+import { OpsItem, WorkspaceNotice, NoticeFile } from './configManager';
 import { OpsTreeDataProvider } from './treeDataProvider';
+import { NoticeCollectionProvider } from './noticeCollectionProvider';
 
 export class CommandHandler {
-    constructor(private treeDataProvider: OpsTreeDataProvider) {}
+    constructor(
+        private treeDataProvider: OpsTreeDataProvider,
+        private noticeCollectionProvider: NoticeCollectionProvider
+    ) {}
 
     async openFile(item: OpsItem): Promise<void> {
         if (!item.path) {
@@ -287,6 +291,181 @@ export class CommandHandler {
         if (confirm === 'Delete') {
             await this.treeDataProvider.deleteItem(item.id);
             vscode.window.showInformationMessage(`Deleted: ${item.name}`);
+        }
+    }
+
+    async switchNoticeCollection(): Promise<void> {
+        const notices = this.noticeCollectionProvider.getWorkspaceNotices();
+        
+        if (notices.length === 0) {
+            vscode.window.showInformationMessage('No workspace notice collections available. Create one first.');
+            return;
+        }
+
+        const items = notices.map((notice: WorkspaceNotice) => ({
+            label: notice.name,
+            description: `${notice.files.length} files - ${notice.description || 'No description'}`
+        }));
+
+        // Add option to clear current selection
+        items.unshift({
+            label: '$(close) Clear Selection',
+            description: 'Hide the current notice collection'
+        });
+
+        const selected = await vscode.window.showQuickPick(items, {
+            placeHolder: 'Select a workspace notice collection to display'
+        });
+
+        if (selected) {
+            if (selected.label === '$(close) Clear Selection') {
+                await this.noticeCollectionProvider.setCurrentNotice('');
+                vscode.window.showInformationMessage('Notice collection cleared');
+            } else {
+                await this.noticeCollectionProvider.setCurrentNotice(selected.label);
+                vscode.window.showInformationMessage(`Switched to notice collection: ${selected.label}`);
+            }
+        }
+    }
+
+    async addNoticeCollection(): Promise<void> {
+        const name = await vscode.window.showInputBox({
+            prompt: 'Enter name for the new notice collection',
+            validateInput: (value) => {
+                if (!value || value.trim().length === 0) {
+                    return 'Name cannot be empty';
+                }
+                const existing = this.noticeCollectionProvider.getWorkspaceNotices();
+                if (existing.find((n: WorkspaceNotice) => n.name === value.trim())) {
+                    return 'A notice collection with this name already exists';
+                }
+                return undefined;
+            }
+        });
+
+        if (!name) {
+            return;
+        }
+
+        const description = await vscode.window.showInputBox({
+            prompt: 'Enter description for the notice collection (optional)'
+        });
+
+        const files: NoticeFile[] = [];
+        
+        // Allow user to add files
+        while (true) {
+            const addFile = await vscode.window.showQuickPick([
+                { label: '$(add) Add File', description: 'Add a file to this collection' },
+                { label: '$(check) Done', description: 'Finish creating the collection' }
+            ], {
+                placeHolder: `Collection "${name}" has ${files.length} files. Add more or finish?`
+            });
+
+            if (!addFile || addFile.label === '$(check) Done') {
+                break;
+            }
+
+            const fileName = await vscode.window.showInputBox({
+                prompt: 'Enter display name for the file'
+            });
+
+            if (!fileName) {
+                continue;
+            }
+
+            const filePath = await vscode.window.showInputBox({
+                prompt: 'Enter file path (relative to workspace root)',
+                value: './'
+            });
+
+            if (!filePath) {
+                continue;
+            }
+
+            const fileDescription = await vscode.window.showInputBox({
+                prompt: 'Enter file description (optional)'
+            });
+
+            files.push({
+                name: fileName,
+                path: filePath,
+                description: fileDescription || undefined
+            });
+        }
+
+        if (files.length === 0) {
+            vscode.window.showWarningMessage('Cannot create empty notice collection');
+            return;
+        }
+
+        const notice: WorkspaceNotice = {
+            name: name.trim(),
+            description: description?.trim() || undefined,
+            files
+        };
+
+        await this.noticeCollectionProvider.addWorkspaceNotice(notice);
+        vscode.window.showInformationMessage(`Created notice collection: ${notice.name} with ${files.length} files`);
+    }
+
+    async manageNoticeCollections(): Promise<void> {
+        const notices = this.noticeCollectionProvider.getWorkspaceNotices();
+        
+        if (notices.length === 0) {
+            vscode.window.showInformationMessage('No workspace notice collections available.');
+            return;
+        }
+
+        const items = notices.map((notice: WorkspaceNotice) => ({
+            label: notice.name,
+            description: `${notice.files.length} files`,
+            detail: notice.description
+        }));
+
+        const selected = await vscode.window.showQuickPick(items, {
+            placeHolder: 'Select a notice collection to manage'
+        });
+
+        if (!selected) {
+            return;
+        }
+
+        const actions = await vscode.window.showQuickPick([
+            { label: '$(eye) Set as Current', description: 'Display this collection in the tree' },
+            { label: '$(edit) Edit Collection', description: 'Modify files in this collection' },
+            { label: '$(trash) Delete Collection', description: 'Remove this collection' }
+        ], {
+            placeHolder: `Manage collection: ${selected.label}`
+        });
+
+        if (!actions) {
+            return;
+        }
+
+        switch (actions.label) {
+            case '$(eye) Set as Current':
+                await this.noticeCollectionProvider.setCurrentNotice(selected.label);
+                vscode.window.showInformationMessage(`Set current collection to: ${selected.label}`);
+                break;
+                
+            case '$(edit) Edit Collection':
+                vscode.window.showInformationMessage('Edit functionality coming soon!');
+                // TODO: Implement edit functionality
+                break;
+                
+            case '$(trash) Delete Collection':
+                const confirm = await vscode.window.showWarningMessage(
+                    `Are you sure you want to delete the collection "${selected.label}"?`,
+                    { modal: true },
+                    'Delete'
+                );
+                
+                if (confirm === 'Delete') {
+                    await this.noticeCollectionProvider.removeWorkspaceNotice(selected.label);
+                    vscode.window.showInformationMessage(`Deleted collection: ${selected.label}`);
+                }
+                break;
         }
     }
 }
