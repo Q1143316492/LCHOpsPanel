@@ -1,0 +1,190 @@
+/* Games Panel Styles */
+body {
+    padding: 10px;
+    font-family: var(--vscode-font-family);
+    color: var(--vscode-foreground);
+    background-color: var(--vscode-editor-background);
+    margin: 0;
+}
+
+#gameContainer {
+    width: 100%;
+    max-width: 300px;
+}
+
+#gameHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--vscode-panel-border);
+}
+
+#gameTitle {
+    margin: 0;
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--vscode-foreground);
+}
+
+#gameControls button {
+    background: var(--vscode-button-background);
+    color: var(--vscode-button-foreground);
+    border: none;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-size: 12px;
+}
+
+#gameControls button:hover {
+    background: var(--vscode-button-hoverBackground);
+}
+
+#gameStatus {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+#gameBoard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 8px;
+    background-color: var(--vscode-input-background);
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    border: 1px solid var(--vscode-input-border);
+}
+
+.game-tile {
+    aspect-ratio: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 3px;
+    transition: all 0.15s ease-in-out;
+    background-color: var(--vscode-editor-background);
+    border: 1px solid var(--vscode-panel-border);
+}
+
+.game-tile.tile-0 {
+    background-color: var(--vscode-input-background);
+    color: transparent;
+}
+
+.game-tile.tile-2 {
+    background-color: #eee4da;
+    color: #776e65;
+}
+
+.game-tile.tile-4 {
+    background-color: #ede0c8;
+    color: #776e65;
+}
+
+.game-tile.tile-8 {
+    background-color: #f2b179;
+    color: #f9f6f2;
+}
+
+.game-tile.tile-16 {
+    background-color: #f59563;
+    color: #f9f6f2;
+}
+
+.game-tile.tile-32 {
+    background-color: #f67c5f;
+    color: #f9f6f2;
+}
+
+.game-tile.tile-64 {
+    background-color: #f65e3b;
+    color: #f9f6f2;
+}
+
+.game-tile.tile-128 {
+    background-color: #edcf72;
+    color: #f9f6f2;
+    font-size: 14px;
+}
+
+.game-tile.tile-256 {
+    background-color: #edcc61;
+    color: #f9f6f2;
+    font-size: 14px;
+}
+
+.game-tile.tile-512 {
+    background-color: #edc850;
+    color: #f9f6f2;
+    font-size: 14px;
+}
+
+.game-tile.tile-1024 {
+    background-color: #edc53f;
+    color: #f9f6f2;
+    font-size: 13px;
+}
+
+.game-tile.tile-2048 {
+    background-color: #edc22e;
+    color: #f9f6f2;
+    font-size: 13px;
+    box-shadow: 0 0 30px 10px rgba(243, 215, 116, 0.4);
+}
+
+.game-tile.tile-super {
+    background-color: #3c3a32;
+    color: #f9f6f2;
+    font-size: 12px;
+}
+
+#gameInstructions {
+    font-size: 12px;
+    color: var(--vscode-descriptionForeground);
+    text-align: center;
+    line-height: 1.4;
+}
+
+#gameInstructions p {
+    margin: 5px 0;
+}
+
+.game-message {
+    text-align: center;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.game-message.win {
+    background-color: rgba(119, 204, 119, 0.2);
+    color: var(--vscode-testing-iconPassed);
+    border: 1px solid var(--vscode-testing-iconPassed);
+}
+
+.game-message.game-over {
+    background-color: rgba(240, 173, 78, 0.2);
+    color: var(--vscode-testing-iconFailed);
+    border: 1px solid var(--vscode-testing-iconFailed);
+}
+
+/* Dark theme adjustments */
+.vscode-dark .game-tile.tile-2,
+.vscode-dark .game-tile.tile-4 {
+    color: #776e65;
+}
+
+/* Focus styles for accessibility */
+button:focus {
+    outline: 1px solid var(--vscode-focusBorder);
+    outline-offset: 2px;
+}

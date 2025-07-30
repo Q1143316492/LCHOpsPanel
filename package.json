@@ -3,7 +3,7 @@
   "displayName": "LCH Ops Panel",
   "publisher": "Weylochen",
   "description": "A VS Code extension for managing workspace configurations with custom paths, documents, executable scripts, and commands in a tree view panel",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "icon": "icon.png",
   "repository": {
     "type": "git",
@@ -37,6 +37,12 @@
         {
           "id": "lchNoticeCollectionView",
           "name": "Notice Collections",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
+          "id": "lchGamesPanelView",
+          "name": "Mini Games",
+          "type": "webview",
           "when": "workspaceFolderCount > 0"
         }
       ]
@@ -92,6 +98,21 @@
         "command": "lchOpsPanel.manageNoticeCollections",
         "title": "Manage Notice Collections",
         "icon": "$(settings-gear)"
+      },
+      {
+        "command": "lchOpsPanel.startGame2048",
+        "title": "Start 2048 Game",
+        "icon": "$(game)"
+      },
+      {
+        "command": "lchOpsPanel.switchGame",
+        "title": "Switch Game",
+        "icon": "$(arrow-swap)"
+      },
+      {
+        "command": "lchOpsPanel.resetGame",
+        "title": "Reset Game",
+        "icon": "$(refresh)"
       }
     ],
     "menus": {
@@ -120,6 +141,16 @@
           "command": "lchOpsPanel.manageNoticeCollections",
           "when": "view == lchNoticeCollectionView",
           "group": "navigation@3"
+        },
+        {
+          "command": "lchOpsPanel.switchGame",
+          "when": "view == lchGamesPanelView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "lchOpsPanel.resetGame",
+          "when": "view == lchGamesPanelView",
+          "group": "navigation@2"
         }
       ],
       "view/item/context": [

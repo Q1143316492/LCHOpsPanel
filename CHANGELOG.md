@@ -2,6 +2,32 @@
 
 All notable changes to the "LCHOpsPanel" extension will be documented in this file.
 
+## [1.2.0] - 2025-07-30
+
+### Added 🎮
+- **Mini Games Panel**: New WebView-based games panel in the sidebar
+- **2048 Game**: Complete implementation of the classic 2048 puzzle game
+  - Smooth keyboard controls with arrow keys
+  - Real-time score tracking and display
+  - Persistent best score storage using VS Code's global state
+  - Win/lose condition detection with appropriate messaging
+  - Beautiful tile animations and VS Code theme integration
+- **Extensible Game Architecture**: Modular design for easy addition of future games
+  - Base game interface and abstract class
+  - Game manager for handling multiple games
+  - Clean separation between game logic and UI
+
+### Changed
+- Updated extension version to 1.2.0
+- Enhanced sidebar with third panel for entertainment
+- Improved package.json with new game-related commands
+
+### Technical
+- Added new commands: `switchGame`, `resetGame`, `startGame2048`
+- Created comprehensive games module with TypeScript interfaces
+- Implemented WebView communication for real-time game interaction
+- Added responsive CSS styling with VS Code theme variables
+
 ## [0.1.0] - 2025-07-27
 
 ### Changed

@@ -1,9 +1,16 @@
 
 # LCH Ops Panel
 
-A Visual Studio Code extension for managing workspace configurations with dual tree view panels.
+A Visual Studio Code extension for managing workspace configurations with dual tree view panels and mini games for coding breaks.
 
 ## Features
+
+### 🎮 Mini Games Panel (NEW!)
+- **2048 Game**: Classic number puzzle game built right into the sidebar
+- **Coding Breaks**: Perfect for quick relaxation during development
+- **Persistent Scores**: Your best scores are automatically saved
+- **Keyboard Controls**: Use arrow keys for smooth gameplay
+- **More Games Coming**: Architecture designed for easy game additions
 
 ### 📋 Dual Panel Design
 - **Operations Panel**: Traditional file/script/command management with categories
@@ -108,6 +115,15 @@ Edit the `.lch-ops-panel.json` file in your workspace to customize both panels.
 
 ## Repository
 [https://github.com/Q1143316492/LCHOpsPanel](https://github.com/Q1143316492/LCHOpsPanel)
+
+## Documentation
+
+For more detailed documentation:
+
+- 🎮 **[Game Feature Guide](docs/GAMES_README.md)** - Complete guide to the mini-games panel
+- 🧪 **[Testing Guide](docs/TESTING_GUIDE.md)** - How to test and debug the extension
+- 🚀 **[Quick Start Guide](docs/QUICKSTART.md)** - Get started quickly
+- 🔧 **[VS Code Extension Quickstart](docs/vsc-extension-quickstart.md)** - Extension development guide
 
 ## License
 This project is licensed under the terms of the [MIT License](./LICENSE.md).

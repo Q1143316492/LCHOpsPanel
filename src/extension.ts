@@ -1,8 +1,7 @@
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { OpsTreeDataProvider } from './treeDataProvider';
 import { NoticeCollectionProvider } from './noticeCollectionProvider';
+import { GamesPanelProvider } from './gamesPanelProvider';
 import { CommandHandler } from './commandHandler';
 
 // This method is called when your extension is activated
@@ -13,6 +12,7 @@ export function activate(context: vscode.ExtensionContext) {
     // Create the tree data providers
     const treeDataProvider = new OpsTreeDataProvider();
     const noticeCollectionProvider = new NoticeCollectionProvider();
+    const gamesPanelProvider = new GamesPanelProvider(context.extensionUri, context);
     
     // Create the tree views
     const treeView = vscode.window.createTreeView('lchOpsPanelView', {
@@ -24,6 +24,12 @@ export function activate(context: vscode.ExtensionContext) {
         treeDataProvider: noticeCollectionProvider,
         showCollapseAll: true
     });
+
+    // Register the games webview view provider
+    const gamesView = vscode.window.registerWebviewViewProvider(
+        GamesPanelProvider.viewType,
+        gamesPanelProvider
+    );
     
     console.log('Tree views created successfully');
 
@@ -74,6 +80,19 @@ export function activate(context: vscode.ExtensionContext) {
         
         vscode.commands.registerCommand('lchOpsPanel.manageNoticeCollections', () => {
             commandHandler.manageNoticeCollections();
+        }),
+
+        vscode.commands.registerCommand('lchOpsPanel.switchGame', () => {
+            // For now, only 2048 is available, but this can be extended
+            vscode.window.showInformationMessage('Currently only 2048 game is available!');
+        }),
+
+        vscode.commands.registerCommand('lchOpsPanel.resetGame', () => {
+            gamesPanelProvider.resetCurrentGame();
+        }),
+
+        vscode.commands.registerCommand('lchOpsPanel.startGame2048', () => {
+            gamesPanelProvider.switchGame('2048');
         })
     ];
 
@@ -83,6 +102,7 @@ export function activate(context: vscode.ExtensionContext) {
     // Add tree views to subscriptions
     context.subscriptions.push(treeView);
     context.subscriptions.push(noticeCollectionView);
+    context.subscriptions.push(gamesView);
     
     // Add tree data providers to subscriptions for proper disposal
     context.subscriptions.push(treeDataProvider);
