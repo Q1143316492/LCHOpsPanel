@@ -2,6 +2,33 @@
 
 All notable changes to the "LCHOpsPanel" extension will be documented in this file.
 
+## [1.3.0] - 2025-07-31
+
+### Added 💣
+- **Minesweeper Game**: Complete implementation of the classic minesweeper game
+  - Three difficulty levels: Beginner (9x9, 10 mines), Intermediate (16x16, 40 mines), Expert (30x16, 99 mines)
+  - Smart first-click protection (no mines around first click)
+  - Left-click to reveal, right-click to flag mines
+  - Auto-reveal empty areas and number display
+  - Win/lose detection with appropriate messaging
+- **Game Selection System**: Dropdown menu and command palette integration
+  - Easy switching between 2048 and Minesweeper
+  - Game preference persistence (remembers last played game)
+  - Enhanced UI with game-specific controls and status displays
+
+### Enhanced 🎮
+- **Improved Game Architecture**: Better separation of game logic and UI
+- **WASD Support for 2048**: Added WASD keys alongside arrow keys for 2048 game
+- **Enhanced Commands**: New commands for direct game access
+  - `lchOpsPanel.startGameMinesweeper` - Start Minesweeper directly
+  - Improved `lchOpsPanel.switchGame` with game selection UI
+
+### Technical 🔧
+- Added responsive grid layout for minesweeper board
+- Implemented right-click context menu handling
+- Enhanced CSS styling with game-specific themes
+- Improved state management across multiple games
+
 ## [1.2.0] - 2025-07-30
 
 ### Added 🎮

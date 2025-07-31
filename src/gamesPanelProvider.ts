@@ -34,7 +34,12 @@ export class GamesPanelProvider implements vscode.WebviewViewProvider {
         webviewView.webview.onDidReceiveMessage(data => {
             switch (data.type) {
                 case 'gameAction':
-                    this._handleGameAction(data.action, data.payload);
+                    if (data.action === 'switchGame') {
+                        this._gameManager.switchGame(data.payload.gameType);
+                        this._sendGameState();
+                    } else {
+                        this._handleGameAction(data.action, data.payload);
+                    }
                     break;
                 case 'requestGameState':
                     this._sendGameState();
@@ -96,19 +101,44 @@ export class GamesPanelProvider implements vscode.WebviewViewProvider {
             <body>
                 <div id="gameContainer">
                     <div id="gameHeader">
-                        <h3 id="gameTitle">2048</h3>
+                        <h3 id="gameTitle">Mini Games</h3>
                         <div id="gameControls">
+                            <select id="gameSelector">
+                                <option value="2048">2048</option>
+                                <option value="minesweeper">Minesweeper</option>
+                            </select>
                             <button id="newGameBtn">New Game</button>
                         </div>
                     </div>
                     <div id="gameArea">
-                        <div id="gameStatus">
-                            <div>Score: <span id="score">0</span></div>
-                            <div>Best: <span id="best">0</span></div>
+                        <!-- 2048 Game Elements -->
+                        <div id="game2048" class="game-content">
+                            <div id="gameStatus">
+                                <div>Score: <span id="score">0</span></div>
+                                <div>Best: <span id="best">0</span></div>
+                            </div>
+                            <div id="gameBoard"></div>
+                            <div id="gameInstructions">
+                                <p>Use arrow keys (↑↓←→) or WASD to move tiles. Combine tiles with the same number to reach 2048!</p>
+                            </div>
                         </div>
-                        <div id="gameBoard"></div>
-                        <div id="gameInstructions">
-                            <p>Use arrow keys (↑↓←→) or WASD to move tiles. Combine tiles with the same number to reach 2048!</p>
+                        
+                        <!-- Minesweeper Game Elements -->
+                        <div id="gameMinesweeper" class="game-content" style="display: none;">
+                            <div id="minesweeperStatus">
+                                <div>Mines: <span id="remainingMines">10</span></div>
+                                <div>
+                                    <select id="difficultySelector">
+                                        <option value="beginner">Beginner (9×9)</option>
+                                        <option value="intermediate">Intermediate (16×16)</option>
+                                        <option value="expert">Expert (30×16)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="minesweeperBoard"></div>
+                            <div id="minesweeperInstructions">
+                                <p>Left click to reveal, right click to flag. Find all mines without clicking on them!</p>
+                            </div>
                         </div>
                     </div>
                 </div>

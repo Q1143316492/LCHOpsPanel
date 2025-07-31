@@ -82,9 +82,25 @@ export function activate(context: vscode.ExtensionContext) {
             commandHandler.manageNoticeCollections();
         }),
 
-        vscode.commands.registerCommand('lchOpsPanel.switchGame', () => {
-            // For now, only 2048 is available, but this can be extended
-            vscode.window.showInformationMessage('Currently only 2048 game is available!');
+        vscode.commands.registerCommand('lchOpsPanel.switchGame', async () => {
+            const games = ['2048', 'minesweeper'];
+            const gameNames = {
+                '2048': '2048 - Number Puzzle',
+                'minesweeper': 'Minesweeper - Mine Hunter'
+            };
+            
+            const items = games.map(game => ({
+                label: gameNames[game as keyof typeof gameNames],
+                value: game
+            }));
+            
+            const selected = await vscode.window.showQuickPick(items, {
+                placeHolder: 'Select a game to play'
+            });
+            
+            if (selected) {
+                gamesPanelProvider.switchGame(selected.value);
+            }
         }),
 
         vscode.commands.registerCommand('lchOpsPanel.resetGame', () => {
@@ -93,6 +109,10 @@ export function activate(context: vscode.ExtensionContext) {
 
         vscode.commands.registerCommand('lchOpsPanel.startGame2048', () => {
             gamesPanelProvider.switchGame('2048');
+        }),
+
+        vscode.commands.registerCommand('lchOpsPanel.startGameMinesweeper', () => {
+            gamesPanelProvider.switchGame('minesweeper');
         })
     ];
 

@@ -7,10 +7,11 @@ A Visual Studio Code extension for managing workspace configurations with dual t
 
 ### 🎮 Mini Games Panel (NEW!)
 - **2048 Game**: Classic number puzzle game built right into the sidebar
+- **Minesweeper**: Classic mine-hunting game with three difficulty levels
+- **Game Switching**: Easy switching between games via dropdown or command palette
 - **Coding Breaks**: Perfect for quick relaxation during development
 - **Persistent Scores**: Your best scores are automatically saved
-- **Keyboard Controls**: Use arrow keys for smooth gameplay
-- **More Games Coming**: Architecture designed for easy game additions
+- **Smart Controls**: Keyboard controls for 2048, mouse controls for Minesweeper
 
 ### 📋 Dual Panel Design
 - **Operations Panel**: Traditional file/script/command management with categories
