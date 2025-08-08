@@ -3,6 +3,7 @@ import { OpsTreeDataProvider } from './treeDataProvider';
 import { NoticeCollectionProvider } from './noticeCollectionProvider';
 import { GamesPanelProvider } from './gamesPanelProvider';
 import { CommandHandler } from './commandHandler';
+import * as path from 'path'; // Add this line
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -113,6 +114,21 @@ export function activate(context: vscode.ExtensionContext) {
 
         vscode.commands.registerCommand('lchOpsPanel.startGameMinesweeper', () => {
             gamesPanelProvider.switchGame('minesweeper');
+        }),
+
+        vscode.commands.registerCommand('lchOpsPanel.openConfigFile', async () => {
+            const workspaceFolders = vscode.workspace.workspaceFolders;
+            if (workspaceFolders && workspaceFolders.length > 0) {
+                const rootPath = workspaceFolders[0].uri.fsPath;
+                const configFilePath = vscode.Uri.file(path.join(rootPath, '.lch-ops-panel.json'));
+                try {
+                    await vscode.window.showTextDocument(configFilePath);
+                } catch (error) {
+                    vscode.window.showErrorMessage(`无法打开配置文件: ${error}`);
+                }
+            } else {
+                vscode.window.showInformationMessage('没有打开的工作区文件夹。');
+            }
         })
     ];
 

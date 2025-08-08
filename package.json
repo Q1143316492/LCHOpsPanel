@@ -118,6 +118,11 @@
         "command": "lchOpsPanel.resetGame",
         "title": "Reset Game",
         "icon": "$(refresh)"
+      },
+      {
+        "command": "lchOpsPanel.openConfigFile",
+        "title": "Open Config File",
+        "icon": "$(file-code)"
       }
     ],
     "menus": {
@@ -131,6 +136,11 @@
           "command": "lchOpsPanel.addItem",
           "when": "view == lchOpsPanelView",
           "group": "navigation@10"
+        },
+        {
+          "command": "lchOpsPanel.openConfigFile",
+          "when": "view == lchOpsPanelView",
+          "group": "navigation@15"
         },
         {
           "command": "lchOpsPanel.switchNoticeCollection",
