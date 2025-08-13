@@ -2,6 +2,36 @@
 
 All notable changes to the "LCHOpsPanel" extension will be documented in this file.
 
+## [1.4.0] - 2025-01-XX
+
+### Added 🌳
+- **JSON Tree Editor**: Revolutionary JSON editing experience
+  - Tree structure view similar to Unreal Engine Data Assets
+  - Visual property editing with type-aware input controls
+  - Full dark theme compatibility with VSCode color variables
+  - Smart type detection and automatic conversion (string, number, boolean, null)
+  - Property management: add, delete, rename with intuitive UI controls
+  - Expand/collapse functionality for nested objects and arrays
+  - Real-time saving with automatic file synchronization
+  - Multi-line text support for complex string values
+  - Custom editor integration with "Open with" support
+- **Enhanced JSON Workflow**: 
+  - Editor title bar button for quick access to tree editor
+  - Command palette integration for JSON tree editing
+  - File picker dialog for selecting JSON files to edit
+  - Error handling and validation for malformed JSON
+
+### Enhanced 📝
+- **Documentation**: Added comprehensive JSON Tree Editor guide
+- **User Experience**: Improved JSON file editing workflow
+- **Accessibility**: Better keyboard navigation and screen reader support
+
+### Technical 🔧
+- Implemented custom text editor provider for JSON files
+- Added webview-based tree rendering with CSS Grid layout
+- Enhanced build system to include new media assets
+- Improved extension architecture with modular editor providers
+
 ## [1.3.0] - 2025-07-31
 
 ### Added 💣

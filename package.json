@@ -3,7 +3,7 @@
   "displayName": "LCH Ops Panel",
   "publisher": "Weylochen",
   "description": "A VS Code extension for managing workspace configurations with custom paths, documents, executable scripts, and commands in a tree view panel",
-  "version": "1.4.0",
+  "version": "1.4.2",
   "icon": "icon.png",
   "repository": {
     "type": "git",
@@ -123,6 +123,11 @@
         "command": "lchOpsPanel.openConfigFile",
         "title": "Open Config File",
         "icon": "$(file-code)"
+      },
+      {
+        "command": "lchOpsPanel.openJsonEditor",
+        "title": "Open JSON Tree Editor",
+        "icon": "$(symbol-structure)"
       }
     ],
     "menus": {
@@ -204,8 +209,27 @@
           "when": "view == lchOpsPanelView && (viewItem == file || viewItem == script || viewItem == command)",
           "group": "2_manage@2"
         }
+      ],
+      "editor/title": [
+        {
+          "command": "lchOpsPanel.openJsonEditor",
+          "when": "resourceExtname == .json",
+          "group": "navigation"
+        }
       ]
-    }
+    },
+    "customEditors": [
+      {
+        "viewType": "lchOpsPanel.jsonTreeEditor",
+        "displayName": "JSON Tree Editor",
+        "selector": [
+          {
+            "filenamePattern": "*.json"
+          }
+        ],
+        "priority": "option"
+      }
+    ]
   },
   "scripts": {
     "vscode:prepublish": "npm run package",

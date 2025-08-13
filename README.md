@@ -5,7 +5,16 @@ A Visual Studio Code extension for managing workspace configurations with dual t
 
 ## Features
 
-### 🎮 Mini Games Panel (NEW!)
+### 🌳 JSON Tree Editor (NEW!)
+- **Tree Structure View**: Display JSON files in an intuitive tree format similar to UE Data Assets
+- **Visual Editing**: Edit JSON properties directly in the tree view with type-aware inputs
+- **Dark Theme Support**: Fully compatible with VSCode dark themes
+- **Smart Type Detection**: Automatic type conversion for strings, numbers, booleans, and null values
+- **Property Management**: Add, delete, and rename properties with visual controls
+- **Expand/Collapse**: Control visibility of nested objects and arrays
+- **Real-time Saving**: Changes are automatically saved to the file
+
+### 🎮 Mini Games Panel
 - **2048 Game**: Classic number puzzle game built right into the sidebar
 - **Minesweeper**: Classic mine-hunting game with three difficulty levels
 - **Game Switching**: Easy switching between games via dropdown or command palette
@@ -121,6 +130,7 @@ Edit the `.lch-ops-panel.json` file in your workspace to customize both panels.
 
 For more detailed documentation:
 
+- 🌳 **[JSON Tree Editor Guide](docs/JSON_TREE_EDITOR.md)** - Complete guide to the JSON tree editing feature
 - 🎮 **[Game Feature Guide](docs/GAMES_README.md)** - Complete guide to the mini-games panel
 - 🧪 **[Testing Guide](docs/TESTING_GUIDE.md)** - How to test and debug the extension
 - 🚀 **[Quick Start Guide](docs/QUICKSTART.md)** - Get started quickly

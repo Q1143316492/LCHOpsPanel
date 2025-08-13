@@ -1,0 +1,54 @@
+{
+  "name": "示例配置007",
+  "version": "1.0.0",
+  "settings": {
+    "theme": "dark",
+    "language": "zh-CN",
+    "features": {
+      "autoSave": true,
+      "notifications": {
+        "enabled": true,
+        "sound": false,
+        "types": [
+          "error",
+          "warning",
+          "info"
+        ]
+      }
+    }
+  },
+  "servers": [
+    {
+      "name": "开发服务器",
+      "host": "localhost",
+      "port": 3000,
+      "ssl": false
+    },
+    {
+      "name": "生产服务器",
+      "host": "api.example.com",
+      "port": 443,
+      "ssl": true
+    }
+  ],
+  "database": {
+    "type": "postgresql",
+    "connection": {
+      "host": "db.example.com",
+      "port": 5432,
+      "database": "myapp",
+      "username": "admin",
+      "password": null
+    },
+    "pool": {
+      "min": 2,
+      "max": 10
+    }
+  },
+  "logging": {
+    "level": "info",
+    "file": "/var/log/app.log",
+    "rotate": true,
+    "maxSize": "10MB"
+  }
+}

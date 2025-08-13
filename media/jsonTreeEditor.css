@@ -1,0 +1,329 @@
+/* JSON Tree Editor Styles */
+:root {
+    --vscode-editor-background: var(--vscode-editor-background, #1e1e1e);
+    --vscode-editor-foreground: var(--vscode-editor-foreground, #d4d4d4);
+    --vscode-input-background: var(--vscode-input-background, #3c3c3c);
+    --vscode-input-foreground: var(--vscode-input-foreground, #cccccc);
+    --vscode-input-border: var(--vscode-input-border, #3c3c3c);
+    --vscode-button-background: var(--vscode-button-background, #0e639c);
+    --vscode-button-foreground: var(--vscode-button-foreground, #ffffff);
+    --vscode-button-hoverBackground: var(--vscode-button-hoverBackground, #1177bb);
+    --vscode-list-hoverBackground: var(--vscode-list-hoverBackground, #2a2d2e);
+    --vscode-tree-indentGuidesStroke: var(--vscode-tree-indentGuidesStroke, #585858);
+    --vscode-errorForeground: var(--vscode-errorForeground, #f48771);
+    --vscode-successForeground: var(--vscode-successForeground, #89d185);
+}
+
+body {
+    font-family: var(--vscode-font-family);
+    font-size: var(--vscode-font-size);
+    background-color: var(--vscode-editor-background);
+    color: var(--vscode-editor-foreground);
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.toolbar {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--vscode-input-border);
+    background-color: var(--vscode-editor-background);
+    display: flex;
+    gap: 8px;
+    flex-shrink: 0;
+}
+
+.btn {
+    padding: 4px 12px;
+    border: 1px solid var(--vscode-input-border);
+    background-color: var(--vscode-button-background);
+    color: var(--vscode-button-foreground);
+    cursor: pointer;
+    border-radius: 2px;
+    font-size: 12px;
+    transition: background-color 0.2s;
+}
+
+.btn:hover {
+    background-color: var(--vscode-button-hoverBackground);
+}
+
+.btn-secondary {
+    background-color: var(--vscode-input-background);
+    color: var(--vscode-input-foreground);
+}
+
+.btn-secondary:hover {
+    background-color: var(--vscode-list-hoverBackground);
+}
+
+.btn-success {
+    background-color: var(--vscode-successForeground);
+    color: var(--vscode-editor-background);
+}
+
+.json-tree {
+    flex: 1;
+    overflow-y: auto;
+    padding: 12px;
+    font-family: var(--vscode-editor-font-family, 'Consolas', 'Courier New', monospace);
+}
+
+.tree-node {
+    margin: 2px 0;
+    position: relative;
+}
+
+.tree-node-content {
+    display: flex;
+    align-items: center;
+    padding: 2px 4px;
+    border-radius: 2px;
+    transition: background-color 0.2s;
+}
+
+.tree-node-content:hover {
+    background-color: var(--vscode-list-hoverBackground);
+}
+
+.tree-node-indent {
+    width: 20px;
+    display: inline-block;
+    position: relative;
+}
+
+.tree-node-indent::before {
+    content: '';
+    position: absolute;
+    left: 10px;
+    top: 0;
+    bottom: 0;
+    width: 1px;
+    background-color: var(--vscode-tree-indentGuidesStroke);
+}
+
+.tree-node-toggle {
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 2px;
+    margin-right: 4px;
+    font-size: 10px;
+    color: var(--vscode-editor-foreground);
+}
+
+.tree-node-toggle:hover {
+    background-color: var(--vscode-list-hoverBackground);
+}
+
+.tree-node-toggle.collapsed::before {
+    content: '▶';
+}
+
+.tree-node-toggle.expanded::before {
+    content: '▼';
+}
+
+.tree-node-toggle.leaf {
+    visibility: hidden;
+}
+
+.tree-node-key {
+    color: #9cdcfe;
+    font-weight: 500;
+    margin-right: 8px;
+    min-width: 0;
+}
+
+.tree-node-key input {
+    background-color: var(--vscode-input-background);
+    color: var(--vscode-input-foreground);
+    border: 1px solid var(--vscode-input-border);
+    padding: 2px 4px;
+    font-size: inherit;
+    font-family: inherit;
+    border-radius: 2px;
+    min-width: 60px;
+}
+
+.tree-node-value {
+    flex: 1;
+    min-width: 0;
+}
+
+.tree-node-value input,
+.tree-node-value textarea {
+    background-color: var(--vscode-input-background);
+    color: var(--vscode-input-foreground);
+    border: 1px solid var(--vscode-input-border);
+    padding: 2px 4px;
+    font-size: inherit;
+    font-family: inherit;
+    border-radius: 2px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.tree-node-value textarea {
+    resize: vertical;
+    min-height: 20px;
+}
+
+.tree-node-type {
+    color: #569cd6;
+    font-size: 11px;
+    margin-left: 8px;
+    opacity: 0.8;
+}
+
+.tree-node-actions {
+    display: flex;
+    gap: 4px;
+    margin-left: 8px;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.tree-node-content:hover .tree-node-actions {
+    opacity: 1;
+}
+
+.action-btn {
+    width: 20px;
+    height: 20px;
+    border: none;
+    background: none;
+    color: var(--vscode-editor-foreground);
+    cursor: pointer;
+    border-radius: 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+}
+
+.action-btn:hover {
+    background-color: var(--vscode-list-hoverBackground);
+}
+
+.action-btn.delete:hover {
+    background-color: var(--vscode-errorForeground);
+    color: white;
+}
+
+.tree-node-children {
+    margin-left: 20px;
+    border-left: 1px solid var(--vscode-tree-indentGuidesStroke);
+    padding-left: 8px;
+}
+
+.tree-node-children.collapsed {
+    display: none;
+}
+
+.value-string {
+    color: #ce9178;
+}
+
+.value-number {
+    color: #b5cea8;
+}
+
+.value-boolean {
+    color: #569cd6;
+}
+
+.value-null {
+    color: #569cd6;
+    font-style: italic;
+}
+
+.error-message {
+    background-color: var(--vscode-errorForeground);
+    color: white;
+    padding: 8px 12px;
+    margin: 8px 12px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+.add-property-form {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 4px 8px;
+    background-color: var(--vscode-input-background);
+    border-radius: 4px;
+    margin: 4px 0;
+}
+
+.add-property-form input {
+    background-color: var(--vscode-editor-background);
+    color: var(--vscode-editor-foreground);
+    border: 1px solid var(--vscode-input-border);
+    padding: 4px 8px;
+    border-radius: 2px;
+    font-size: 12px;
+}
+
+.add-property-form select {
+    background-color: var(--vscode-editor-background);
+    color: var(--vscode-editor-foreground);
+    border: 1px solid var(--vscode-input-border);
+    padding: 4px 8px;
+    border-radius: 2px;
+    font-size: 12px;
+}
+
+.type-selector {
+    display: flex;
+    gap: 4px;
+    margin-left: 8px;
+}
+
+.type-btn {
+    padding: 2px 6px;
+    border: 1px solid var(--vscode-input-border);
+    background-color: var(--vscode-input-background);
+    color: var(--vscode-input-foreground);
+    cursor: pointer;
+    border-radius: 2px;
+    font-size: 10px;
+    transition: all 0.2s;
+}
+
+.type-btn:hover {
+    background-color: var(--vscode-list-hoverBackground);
+}
+
+.type-btn.active {
+    background-color: var(--vscode-button-background);
+    color: var(--vscode-button-foreground);
+}
+
+/* Scrollbar styling for dark theme */
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--vscode-editor-background);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--vscode-input-border);
+    border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--vscode-list-hoverBackground);
+}

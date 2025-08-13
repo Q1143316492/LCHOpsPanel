@@ -3,6 +3,7 @@ import { OpsTreeDataProvider } from './treeDataProvider';
 import { NoticeCollectionProvider } from './noticeCollectionProvider';
 import { GamesPanelProvider } from './gamesPanelProvider';
 import { CommandHandler } from './commandHandler';
+import { JsonTreeEditorProvider } from './jsonTreeEditorProvider';
 import * as path from 'path'; // Add this line
 
 // This method is called when your extension is activated
@@ -31,6 +32,9 @@ export function activate(context: vscode.ExtensionContext) {
         GamesPanelProvider.viewType,
         gamesPanelProvider
     );
+
+    // Register the JSON tree editor provider
+    const jsonTreeEditorProvider = JsonTreeEditorProvider.register(context);
     
     console.log('Tree views created successfully');
 
@@ -129,6 +133,41 @@ export function activate(context: vscode.ExtensionContext) {
             } else {
                 vscode.window.showInformationMessage('没有打开的工作区文件夹。');
             }
+        }),
+
+        vscode.commands.registerCommand('lchOpsPanel.openJsonEditor', async (uri?: vscode.Uri) => {
+            let targetUri = uri;
+            
+            if (!targetUri) {
+                // If no URI provided, get the currently active editor
+                const activeEditor = vscode.window.activeTextEditor;
+                if (activeEditor && activeEditor.document.fileName.endsWith('.json')) {
+                    targetUri = activeEditor.document.uri;
+                } else {
+                    // Show file picker for JSON files
+                    const fileUris = await vscode.window.showOpenDialog({
+                        canSelectFiles: true,
+                        canSelectFolders: false,
+                        canSelectMany: false,
+                        filters: {
+                            'JSON Files': ['json']
+                        },
+                        openLabel: 'Open with JSON Tree Editor'
+                    });
+                    
+                    if (fileUris && fileUris.length > 0) {
+                        targetUri = fileUris[0];
+                    } else {
+                        return;
+                    }
+                }
+            }
+            
+            try {
+                await vscode.commands.executeCommand('vscode.openWith', targetUri, 'lchOpsPanel.jsonTreeEditor');
+            } catch (error) {
+                vscode.window.showErrorMessage(`无法打开JSON树形编辑器: ${error}`);
+            }
         })
     ];
 
@@ -139,6 +178,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(treeView);
     context.subscriptions.push(noticeCollectionView);
     context.subscriptions.push(gamesView);
+    context.subscriptions.push(jsonTreeEditorProvider);
     
     // Add tree data providers to subscriptions for proper disposal
     context.subscriptions.push(treeDataProvider);
