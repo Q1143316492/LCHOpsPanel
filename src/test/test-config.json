@@ -1,5 +1,5 @@
 {
-  "name": "示例配置007",
+  "name": "示例配置002",
   "version": "1.0.0",
   "settings": {
     "theme": "dark",
@@ -32,7 +32,7 @@
     }
   ],
   "database": {
-    "type": "postgresql",
+    "type": "postgresql22233",
     "connection": {
       "host": "db.example.com",
       "port": 5432,
@@ -49,6 +49,7 @@
     "level": "info",
     "file": "/var/log/app.log",
     "rotate": true,
-    "maxSize": "10MB"
+    "maxSize": "10MB",
+    "key": 1
   }
 }

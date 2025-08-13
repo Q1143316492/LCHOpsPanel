@@ -186,7 +186,10 @@
             addBtn.className = 'action-btn add';
             addBtn.innerHTML = '+';
             addBtn.title = 'Add property';
-            addBtn.addEventListener('click', () => addProperty(value, path));
+            addBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                addProperty(value, path);
+            });
             actionsDiv.appendChild(addBtn);
         }
 
@@ -194,7 +197,10 @@
         deleteBtn.className = 'action-btn delete';
         deleteBtn.innerHTML = '×';
         deleteBtn.title = 'Delete property';
-        deleteBtn.addEventListener('click', () => deleteProperty(parent, key));
+        deleteBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteProperty(parent, key);
+        });
         actionsDiv.appendChild(deleteBtn);
 
         contentDiv.appendChild(actionsDiv);
@@ -303,62 +309,188 @@
         saveChanges();
     }
 
+    // Custom modal dialog functions
+    function showCustomPrompt(message, defaultValue = '', callback) {
+        const modal = document.createElement('div');
+        modal.className = 'custom-modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">${message}</div>
+                <input type="text" class="modal-input" value="${defaultValue}" />
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-ok">确定</button>
+                    <button class="modal-btn modal-cancel">取消</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        const input = modal.querySelector('.modal-input');
+        const okBtn = modal.querySelector('.modal-ok');
+        const cancelBtn = modal.querySelector('.modal-cancel');
+        
+        input.focus();
+        input.select();
+        
+        const cleanup = () => {
+            document.body.removeChild(modal);
+        };
+        
+        okBtn.addEventListener('click', () => {
+            const value = input.value.trim();
+            cleanup();
+            callback(value);
+        });
+        
+        cancelBtn.addEventListener('click', () => {
+            cleanup();
+            callback(null);
+        });
+        
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                const value = input.value.trim();
+                cleanup();
+                callback(value);
+            } else if (e.key === 'Escape') {
+                cleanup();
+                callback(null);
+            }
+        });
+    }
+    
+    function showCustomAlert(message, callback) {
+        const modal = document.createElement('div');
+        modal.className = 'custom-modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">${message}</div>
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-ok">确定</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        const okBtn = modal.querySelector('.modal-ok');
+        
+        const cleanup = () => {
+            document.body.removeChild(modal);
+            if (callback) callback();
+        };
+        
+        okBtn.addEventListener('click', cleanup);
+        okBtn.focus();
+        
+        modal.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === 'Escape') {
+                cleanup();
+            }
+        });
+    }
+    
+    function showCustomConfirm(message, callback) {
+        const modal = document.createElement('div');
+        modal.className = 'custom-modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">${message}</div>
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-ok">确定</button>
+                    <button class="modal-btn modal-cancel">取消</button>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        const okBtn = modal.querySelector('.modal-ok');
+        const cancelBtn = modal.querySelector('.modal-cancel');
+        
+        const cleanup = (result) => {
+            document.body.removeChild(modal);
+            callback(result);
+        };
+        
+        okBtn.addEventListener('click', () => cleanup(true));
+        cancelBtn.addEventListener('click', () => cleanup(false));
+        okBtn.focus();
+        
+        modal.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                cleanup(true);
+            } else if (e.key === 'Escape') {
+                cleanup(false);
+            }
+        });
+    }
+
     function addProperty(parent, parentPath) {
-        const key = prompt('Enter property name:');
-        if (!key || key.trim() === '') return;
-        
-        const trimmedKey = key.trim();
-        if (parent.hasOwnProperty(trimmedKey)) {
-            alert('Property already exists!');
-            return;
-        }
-        
-        const type = prompt('Enter value type (string, number, boolean, object, array, null):', 'string');
-        let defaultValue;
-        
-        switch (type) {
-            case 'string':
-                defaultValue = '';
-                break;
-            case 'number':
-                defaultValue = 0;
-                break;
-            case 'boolean':
-                defaultValue = false;
-                break;
-            case 'object':
-                defaultValue = {};
-                break;
-            case 'array':
-                defaultValue = [];
-                break;
-            case 'null':
-                defaultValue = null;
-                break;
-            default:
-                defaultValue = '';
-        }
-        
-        parent[trimmedKey] = defaultValue;
-        
-        // Auto-expand parent if it's an object/array
-        if (parentPath) {
-            expandedNodes.add(parentPath);
-        }
-        
-        saveChanges();
+        showCustomPrompt('输入属性名称:', '', (key) => {
+            if (!key || key.trim() === '') return;
+            
+            const trimmedKey = key.trim();
+            if (parent.hasOwnProperty(trimmedKey)) {
+                showCustomAlert('属性已存在!');
+                return;
+            }
+            
+            showCustomPrompt('输入值类型 (string, number, boolean, object, array, null):', 'string', (type) => {
+                if (!type) return;
+                
+                let defaultValue;
+                
+                switch (type) {
+                    case 'string':
+                        defaultValue = '';
+                        break;
+                    case 'number':
+                        defaultValue = 0;
+                        break;
+                    case 'boolean':
+                        defaultValue = false;
+                        break;
+                    case 'object':
+                        defaultValue = {};
+                        break;
+                    case 'array':
+                        defaultValue = [];
+                        break;
+                    case 'null':
+                        defaultValue = null;
+                        break;
+                    default:
+                        defaultValue = '';
+                }
+                
+                parent[trimmedKey] = defaultValue;
+                
+                // Auto-expand parent if it's an object/array
+                if (parentPath) {
+                    expandedNodes.add(parentPath);
+                }
+                
+                saveChanges();
+            });
+        });
     }
 
     function deleteProperty(parent, key) {
-        if (confirm(`Are you sure you want to delete "${key}"?`)) {
-            if (Array.isArray(parent)) {
-                parent.splice(parseInt(key), 1);
-            } else {
-                delete parent[key];
+        showCustomConfirm(`确定要删除 "${key}" 吗?`, (confirmed) => {
+            if (confirmed) {
+                if (Array.isArray(parent)) {
+                    parent.splice(parseInt(key), 1);
+                } else {
+                    delete parent[key];
+                }
+                saveChanges();
             }
-            saveChanges();
-        }
+        });
     }
+
+
 
     function saveChanges() {
         vscode.postMessage({
@@ -409,6 +541,7 @@
             json: jsonData
         });
     });
+
 
     document.getElementById('expandAllBtn').addEventListener('click', expandAll);
     document.getElementById('collapseAllBtn').addEventListener('click', collapseAll);
