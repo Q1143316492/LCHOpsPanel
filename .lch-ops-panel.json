@@ -2,13 +2,12 @@
   "categories": [
     "📁 Files",
     "💻 Scripts",
-    "📝 Logs",
     "⚡ Commands"
   ],
   "items": [
     {
       "id": "example1",
-      "name": "Package.json",
+      "name": "package.json",
       "type": "file",
       "path": "./package.json",
       "category": "📁 Files",
@@ -19,99 +18,87 @@
       "name": "README",
       "type": "file",
       "path": "./README.md",
-      "category": "📝 Logs",
+      "category": "📁 Files",
       "description": "Project documentation"
     },
     {
-      "id": "test-script-1",
-      "name": "Test Script",
+      "id": "script-build",
+      "name": "Build",
       "type": "script",
-      "path": "./scripts/test-script.bat",
-      "category": "💻 Scripts"
+      "path": "./scripts/build.bat",
+      "category": "💻 Scripts",
+      "description": "Compile the extension"
     },
     {
-      "id": "example3",
-      "name": "Build Extension",
-      "type": "command",
-      "command": "echo 'npm run compile'",
-      "category": "⚡ Commands",
-      "description": "Compile the extension code"
+      "id": "script-package",
+      "name": "Package",
+      "type": "script",
+      "path": "./scripts/package.bat",
+      "category": "💻 Scripts",
+      "description": "Build production VSIX"
     },
     {
-      "id": "example4",
-      "name": "Run Tests",
-      "type": "command",
-      "command": "echo 'npm test'",
-      "category": "⚡ Commands",
-      "description": "Run the test suite"
+      "id": "script-install",
+      "name": "Install VSIX",
+      "type": "script",
+      "path": "./scripts/install.bat",
+      "category": "💻 Scripts",
+      "description": "Install the latest VSIX into VS Code"
     },
     {
-      "name": "test echo",
+      "id": "cmd-lint",
+      "name": "Lint",
       "type": "command",
-      "command": "echo 'test echo'",
-      "description": "test222",
+      "command": "npm run lint",
       "category": "⚡ Commands",
-      "id": "scuudx39j"
+      "description": "Run ESLint on src/"
+    },
+    {
+      "id": "cmd-watch",
+      "name": "Watch",
+      "type": "command",
+      "command": "npm run watch",
+      "category": "⚡ Commands",
+      "description": "Start webpack watch mode"
     }
   ],
-  "currentNoticeName": "Terminal Tiler",
   "workspaceNotices": [
     {
-      "name": "Terminal Tiler",
-      "description": "Terminal tiling functionality files",
+      "name": "Core Source",
+      "description": "Key source files for quick navigation",
       "files": [
         {
-          "name": "Terminal Tiler Core",
-          "path": "./scripts/tile/terminal_tiler.py",
-          "description": "Main terminal tiling script"
+          "name": "extension.ts",
+          "path": "./src/extension.ts",
+          "description": "Entry point"
         },
         {
-          "name": "Smart Demo",
-          "path": "./scripts/tile/smart_demo.bat",
-          "description": "Smart tiling demo script"
+          "name": "configStore.ts",
+          "path": "./src/core/configStore.ts",
+          "description": "Config I/O and file watcher"
         },
         {
-          "name": "Test Smart Tiling",
-          "path": "./scripts/tile/test_smart_tiling.py",
-          "description": "Unit tests for smart tiling"
+          "name": "constants.ts",
+          "path": "./src/core/constants.ts",
+          "description": "View IDs and command IDs"
         },
         {
-          "name": "Tile README",
-          "path": "./scripts/tile/README.md",
-          "description": "Documentation for tiling features"
+          "name": "types.ts",
+          "path": "./src/core/types.ts",
+          "description": "Shared data types"
         },
         {
-          "name": "Dependencies Script",
-          "path": "./scripts/tile/install_dependencies.py",
-          "description": "Install required dependencies"
+          "name": "opsPanel/index.ts",
+          "path": "./src/features/opsPanel/index.ts",
+          "description": "Ops Panel commands"
         },
         {
-          "name": "Root README",
-          "path": "./README.md",
-          "description": "Documentation for the root directory"
-        }
-      ]
-    },
-    {
-      "name": "Test Scripts",
-      "description": "Testing and development scripts",
-      "files": [
-        {
-          "name": "Test Script",
-          "path": "./scripts/test-script.bat",
-          "description": "Main test script"
-        },
-        {
-          "name": "Project README",
-          "path": "./README.md",
-          "description": "Project documentation"
-        },
-        {
-          "name": "Package Config",
-          "path": "./package.json",
-          "description": "NPM package configuration"
+          "name": "notices/index.ts",
+          "path": "./src/features/notices/index.ts",
+          "description": "Notice Collections commands"
         }
       ]
     }
-  ]
+  ],
+  "currentNoticeName": "Core Source"
 }

@@ -1,80 +1,59 @@
 import * as vscode from 'vscode';
-import * as path from 'path';
+import { VIEW_IDS } from '../../core/constants';
 
+/**
+ * Custom text editor that renders a JSON file as an interactive tree.
+ */
 export class JsonTreeEditorProvider implements vscode.CustomTextEditorProvider {
+    public static readonly viewType = VIEW_IDS.jsonTreeEditor;
+
     public static register(context: vscode.ExtensionContext): vscode.Disposable {
         const provider = new JsonTreeEditorProvider(context);
-        const providerRegistration = vscode.window.registerCustomEditorProvider(
-            JsonTreeEditorProvider.viewType,
-            provider
-        );
-        return providerRegistration;
+        return vscode.window.registerCustomEditorProvider(JsonTreeEditorProvider.viewType, provider);
     }
-
-    private static readonly viewType = 'lchOpsPanel.jsonTreeEditor';
 
     constructor(private readonly context: vscode.ExtensionContext) {}
 
     public async resolveCustomTextEditor(
         document: vscode.TextDocument,
         webviewPanel: vscode.WebviewPanel,
-        _token: vscode.CancellationToken
     ): Promise<void> {
-        // Setup initial content for the webview
-        webviewPanel.webview.options = {
-            enableScripts: true,
-        };
-        webviewPanel.webview.html = this.getHtmlForWebview(webviewPanel.webview, document);
+        webviewPanel.webview.options = { enableScripts: true };
+        webviewPanel.webview.html = this._getHtml(webviewPanel.webview);
 
-        function updateWebview() {
-            webviewPanel.webview.postMessage({
-                type: 'update',
-                text: document.getText(),
-            });
-        }
+        const post = () => webviewPanel.webview.postMessage({
+            type: 'update',
+            text: document.getText(),
+        });
 
-        // Hook up event handlers so that we can synchronize the webview with the text document.
-        const changeDocumentSubscription = vscode.workspace.onDidChangeTextDocument(e => {
+        const changeSub = vscode.workspace.onDidChangeTextDocument(e => {
             if (e.document.uri.toString() === document.uri.toString()) {
-                updateWebview();
+                post();
             }
         });
-
-        // Make sure we get rid of the listener when our editor is closed.
-        webviewPanel.onDidDispose(() => {
-            changeDocumentSubscription.dispose();
-        });
-
-        // Handle webview state changes (when switching tabs)
+        webviewPanel.onDidDispose(() => changeSub.dispose());
         webviewPanel.onDidChangeViewState(() => {
             if (webviewPanel.visible) {
-                // Refresh the webview when it becomes visible again
-                updateWebview();
+                post();
             }
         });
 
-        // Receive message from the webview.
         webviewPanel.webview.onDidReceiveMessage(e => {
-            switch (e.type) {
-                case 'save':
-                    this.updateTextDocument(document, e.json);
-                    return;
+            if (e.type === 'save') {
+                void this._writeDocument(document, e.json);
             }
         });
 
-        updateWebview();
+        post();
     }
 
-    private getHtmlForWebview(webview: vscode.Webview, document: vscode.TextDocument): string {
-        // Local path to script and css for the webview
+    private _getHtml(webview: vscode.Webview): string {
         const scriptUri = webview.asWebviewUri(
-            vscode.Uri.joinPath(this.context.extensionUri, 'media', 'jsonTreeEditor.js')
+            vscode.Uri.joinPath(this.context.extensionUri, 'media', 'jsonTreeEditor.js'),
         );
         const styleUri = webview.asWebviewUri(
-            vscode.Uri.joinPath(this.context.extensionUri, 'media', 'jsonTreeEditor.css')
+            vscode.Uri.joinPath(this.context.extensionUri, 'media', 'jsonTreeEditor.css'),
         );
-
-        // Use a nonce to whitelist which scripts can be run
         const nonce = getNonce();
 
         return `<!DOCTYPE html>
@@ -102,24 +81,20 @@ export class JsonTreeEditorProvider implements vscode.CustomTextEditorProvider {
             </html>`;
     }
 
-    private updateTextDocument(document: vscode.TextDocument, json: any) {
+    private _writeDocument(document: vscode.TextDocument, json: unknown): Thenable<boolean> {
         const edit = new vscode.WorkspaceEdit();
-
-        // Just replace the entire document every time for this example extension.
-        // A more complete extension should compute minimal edits instead.
         edit.replace(
             document.uri,
             new vscode.Range(0, 0, document.lineCount, 0),
-            JSON.stringify(json, null, 2)
+            JSON.stringify(json, null, 2),
         );
-
         return vscode.workspace.applyEdit(edit);
     }
 }
 
-function getNonce() {
-    let text = '';
+function getNonce(): string {
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let text = '';
     for (let i = 0; i < 32; i++) {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
     }

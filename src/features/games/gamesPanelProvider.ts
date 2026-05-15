@@ -1,92 +1,72 @@
 import * as vscode from 'vscode';
-import { GameManager } from './games/gameManager';
+import { GameManager } from './gameManager';
+import { VIEW_IDS } from '../../core/constants';
 
+/**
+ * Webview-view provider that renders the Mini Games panel and forwards
+ * messages between the webview and GameManager.
+ */
 export class GamesPanelProvider implements vscode.WebviewViewProvider {
-    public static readonly viewType = 'lchGamesPanelView';
-    
-    private _view?: vscode.WebviewView;
-    private _gameManager: GameManager;
-    private _context: vscode.ExtensionContext;
+    public static readonly viewType = VIEW_IDS.gamesPanel;
 
-    constructor(private readonly _extensionUri: vscode.Uri, context: vscode.ExtensionContext) {
-        this._context = context;
+    private _view?: vscode.WebviewView;
+    private readonly _gameManager: GameManager;
+
+    constructor(
+        private readonly _extensionUri: vscode.Uri,
+        context: vscode.ExtensionContext,
+    ) {
         this._gameManager = new GameManager(context);
     }
 
-    public resolveWebviewView(
-        webviewView: vscode.WebviewView,
-        context: vscode.WebviewViewResolveContext,
-        _token: vscode.CancellationToken
-    ) {
+    resolveWebviewView(webviewView: vscode.WebviewView): void {
         this._view = webviewView;
-
         webviewView.webview.options = {
-            // Allow scripts in the webview
             enableScripts: true,
-            localResourceRoots: [
-                this._extensionUri
-            ]
+            localResourceRoots: [this._extensionUri],
         };
+        webviewView.webview.html = this._getHtml(webviewView.webview);
 
-        webviewView.webview.html = this._getHtmlForWebview(webviewView.webview);
-
-        // Handle messages from the webview
         webviewView.webview.onDidReceiveMessage(data => {
             switch (data.type) {
                 case 'gameAction':
                     if (data.action === 'switchGame') {
                         this._gameManager.switchGame(data.payload.gameType);
-                        this._sendGameState();
+                        this._sendState();
                     } else {
-                        this._handleGameAction(data.action, data.payload);
+                        const result = this._gameManager.handleAction(data.action, data.payload);
+                        this._view?.webview.postMessage({ type: 'gameUpdate', data: result });
                     }
                     break;
                 case 'requestGameState':
-                    this._sendGameState();
+                    this._sendState();
                     break;
             }
         });
 
-        // Send initial game state
-        this._sendGameState();
+        this._sendState();
     }
 
-    private _handleGameAction(action: string, payload: any) {
-        const result = this._gameManager.handleAction(action, payload);
-        if (this._view) {
-            this._view.webview.postMessage({
-                type: 'gameUpdate',
-                data: result
-            });
-        }
+    private _sendState(): void {
+        this._view?.webview.postMessage({
+            type: 'gameState',
+            data: this._gameManager.getCurrentState(),
+        });
     }
 
-    private _sendGameState() {
-        const state = this._gameManager.getCurrentState();
-        if (this._view) {
-            this._view.webview.postMessage({
-                type: 'gameState',
-                data: state
-            });
-        }
-    }
-
-    public switchGame(gameType: string) {
+    switchGame(gameType: string): void {
         this._gameManager.switchGame(gameType);
-        this._sendGameState();
+        this._sendState();
     }
 
-    public resetCurrentGame() {
+    resetCurrentGame(): void {
         this._gameManager.resetCurrentGame();
-        this._sendGameState();
+        this._sendState();
     }
 
-    private _getHtmlForWebview(webview: vscode.Webview) {
-        // Get the local path to main script run in the webview, then convert it to a uri we can use in the webview.
+    private _getHtml(webview: vscode.Webview): string {
         const scriptUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'games.js'));
         const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'games.css'));
-
-        // Use a nonce to only allow specific scripts to be run
         const nonce = getNonce();
 
         return `<!DOCTYPE html>
@@ -111,7 +91,6 @@ export class GamesPanelProvider implements vscode.WebviewViewProvider {
                         </div>
                     </div>
                     <div id="gameArea">
-                        <!-- 2048 Game Elements -->
                         <div id="game2048" class="game-content">
                             <div id="gameStatus">
                                 <div>Score: <span id="score">0</span></div>
@@ -122,8 +101,6 @@ export class GamesPanelProvider implements vscode.WebviewViewProvider {
                                 <p>Use arrow keys (↑↓←→) or WASD to move tiles. Combine tiles with the same number to reach 2048!</p>
                             </div>
                         </div>
-                        
-                        <!-- Minesweeper Game Elements -->
                         <div id="gameMinesweeper" class="game-content" style="display: none;">
                             <div id="minesweeperStatus">
                                 <div>Mines: <span id="remainingMines">10</span></div>
@@ -148,9 +125,9 @@ export class GamesPanelProvider implements vscode.WebviewViewProvider {
     }
 }
 
-function getNonce() {
-    let text = '';
+function getNonce(): string {
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let text = '';
     for (let i = 0; i < 32; i++) {
         text += possible.charAt(Math.floor(Math.random() * possible.length));
     }
