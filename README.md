@@ -11,6 +11,9 @@ A VS Code extension that provides a sidebar panel for managing files, scripts, a
 
 **Notice Collections** — named file lists for quick navigation across related files.
 - Switch between collections; files auto-organize by folder path.
+- **Save Open Tabs** as a collection in one click (toolbar button).
+- **Open All** files in a collection at once (right-click or Manage menu).
+- **Edit** a collection: add/remove files, rename, or change description.
 
 **JSON Tree Editor** — visual tree editor for any `.json` file.
 - Open via the editor title button or command palette.
