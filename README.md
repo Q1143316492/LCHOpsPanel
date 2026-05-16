@@ -1,140 +1,90 @@
 
 # LCH Ops Panel
 
-A Visual Studio Code extension for managing workspace configurations with dual tree view panels and mini games for coding breaks.
+A VS Code extension that provides a sidebar panel for managing files, scripts, and commands in a workspace. Includes a notice collections view, a JSON tree editor, and mini games for coding breaks.
 
 ## Features
 
-### 🌳 JSON Tree Editor (NEW!)
-- **Tree Structure View**: Display JSON files in an intuitive tree format similar to UE Data Assets
-- **Visual Editing**: Edit JSON properties directly in the tree view with type-aware inputs
-- **Dark Theme Support**: Fully compatible with VSCode dark themes
-- **Smart Type Detection**: Automatic type conversion for strings, numbers, booleans, and null values
-- **Property Management**: Add, delete, and rename properties with visual controls
-- **Expand/Collapse**: Control visibility of nested objects and arrays
-- **Real-time Saving**: Changes are automatically saved to the file
+**Operations Panel** — category-based shortcuts to files, scripts, and commands.
+- Left-click a file to open it; right-click a script/command to execute it or open a terminal.
+- Add / edit / delete items via the toolbar and context menu.
 
-### 🎮 Mini Games Panel
-- **2048 Game**: Classic number puzzle game built right into the sidebar
-- **Minesweeper**: Classic mine-hunting game with three difficulty levels
-- **Game Switching**: Easy switching between games via dropdown or command palette
-- **Coding Breaks**: Perfect for quick relaxation during development
-- **Persistent Scores**: Your best scores are automatically saved
-- **Smart Controls**: Keyboard controls for 2048, mouse controls for Minesweeper
+**Notice Collections** — named file lists for quick navigation across related files.
+- Switch between collections; files auto-organize by folder path.
 
-### 📋 Dual Panel Design
-- **Operations Panel**: Traditional file/script/command management with categories
-- **Notice Collections**: File collection management with tree structure display
+**JSON Tree Editor** — visual tree editor for any `.json` file.
+- Open via the editor title button or command palette.
 
-### 🔧 Operations Panel
-- **Category-based Organization**: Items grouped into categories:
-  - 📁 Files: Quick access to important project files
-  - 💻 Scripts: Execute batch/shell scripts with one click
-  - 📝 Logs: Access documentation and log files
-  - ⚡ Commands: Run custom commands and build tasks
-- **Context Actions**: Right-click menus for file operations, script execution, and terminal access
-- **Item Management**: Add, edit, and delete items through UI
-
-### 📚 Notice Collections Panel
-- **File Collections**: Organize related files into named collections
-- **Tree Structure**: Files automatically organized by folder structure
-- **Collection Management**: 
-  - Switch between collections
-  - Create new collections
-  - Edit and delete existing collections
-- **Quick File Access**: Click to open files directly
-
-### ⚙️ Configuration
-- **Per-workspace Settings**: Each workspace maintains its own `.lch-ops-panel.json`
-- **Real-time Updates**: Changes reflect immediately in both panels
-- **Flexible Structure**: Support for relative and absolute file paths
+**Mini Games** — 2048 and Minesweeper in the sidebar. Best scores are persisted.
 
 ## Configuration
 
-Edit the `.lch-ops-panel.json` file in your workspace to customize both panels.
-
-## Example Configuration
+Each workspace stores its settings in `.lch-ops-panel.json` at the workspace root. The file is watched; both panels update in real time.
 
 ```json
 {
-  "categories": [
-    "📁 Files",
-    "💻 Scripts", 
-    "📝 Logs",
-    "⚡ Commands"
-  ],
+  "categories": ["📁 Files", "💻 Scripts", "⚡ Commands"],
   "items": [
     {
-      "id": "example1",
-      "name": "Package.json",
+      "id": "pkg",
+      "name": "package.json",
       "type": "file",
       "path": "./package.json",
-      "category": "📁 Files",
-      "description": "Project package configuration"
+      "category": "📁 Files"
     },
     {
-      "id": "example2", 
-      "name": "Test Script",
+      "id": "build",
+      "name": "Build",
       "type": "script",
-      "path": "./scripts/test-script.bat",
-      "category": "💻 Scripts"
+      "path": "./scripts/build.bat",
+      "category": "💻 Scripts",
+      "description": "Compile the extension"
     },
     {
-      "id": "example3",
-      "name": "Build Extension",
-      "type": "command", 
-      "command": "npm run compile",
-      "category": "⚡ Commands",
-      "description": "Compile the extension code"
+      "id": "lint",
+      "name": "Lint",
+      "type": "command",
+      "command": "npm run lint",
+      "category": "⚡ Commands"
     }
   ],
-  "currentNoticeName": "Terminal Tiler",
   "workspaceNotices": [
     {
-      "name": "Terminal Tiler",
-      "description": "Terminal tiling functionality files",
+      "name": "Core Source",
       "files": [
-        {
-          "name": "Terminal Tiler Core",
-          "path": "./scripts/tile/terminal_tiler.py",
-          "description": "Main terminal tiling script"
-        },
-        {
-          "name": "Tile README", 
-          "path": "./scripts/tile/README.md",
-          "description": "Documentation for tiling features"
-        }
+        { "name": "extension.ts", "path": "./src/extension.ts" },
+        { "name": "configStore.ts", "path": "./src/core/configStore.ts" }
       ]
     }
-  ]
+  ],
+  "currentNoticeName": "Core Source"
 }
 ```
 
-## Usage
+**Item types**
 
-### Operations Panel
-- **Add Items**: Click the `+` button in the panel toolbar
-- **Edit/Delete**: Right-click on any item for context menu
-- **Execute**: Click files to open, right-click scripts/commands to execute
+| type | left-click | right-click |
+|------|-----------|-------------|
+| `file` | open in editor | — |
+| `script` | — | execute / open terminal |
+| `command` | — | run in terminal |
 
-### Notice Collections Panel  
-- **Switch Collections**: Click the list icon to select active collection
-- **Manage Collections**: Click the gear icon to edit/delete collections
-- **Add Collections**: Click the folder icon to create new collections
-- **Browse Files**: Expand folders and click files to open
+## Source structure
 
-## Repository
-[https://github.com/Q1143316492/LCHOpsPanel](https://github.com/Q1143316492/LCHOpsPanel)
-
-## Documentation
-
-For more detailed documentation:
-
-- 🌳 **[JSON Tree Editor Guide](docs/JSON_TREE_EDITOR.md)** - Complete guide to the JSON tree editing feature
-- 🎮 **[Game Feature Guide](docs/GAMES_README.md)** - Complete guide to the mini-games panel
-- 🧪 **[Testing Guide](docs/TESTING_GUIDE.md)** - How to test and debug the extension
-- 🚀 **[Quick Start Guide](docs/QUICKSTART.md)** - Get started quickly
-- 🔧 **[VS Code Extension Quickstart](docs/vsc-extension-quickstart.md)** - Extension development guide
+```
+src/
+├── extension.ts          # entry point (activation only)
+├── core/
+│   ├── configStore.ts    # config I/O, file watcher, change events
+│   ├── constants.ts      # view/command IDs
+│   ├── types.ts          # shared types
+│   └── terminalRunner.ts # path resolution & terminal helpers
+└── features/
+    ├── opsPanel/         # Operations Panel view + commands
+    ├── notices/          # Notice Collections view + commands
+    ├── games/            # Mini Games webview
+    └── jsonEditor/       # JSON Tree custom editor
+```
 
 ## License
-This project is licensed under the terms of the [MIT License](./LICENSE.md).
+[MIT](./LICENSE.md)

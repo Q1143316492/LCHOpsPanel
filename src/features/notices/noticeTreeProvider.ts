@@ -63,8 +63,7 @@ export class NoticeTreeProvider implements vscode.TreeDataProvider<NoticeItem> {
             return this._getCollections();
         }
         if (element.type === 'notice-collection') {
-            // The display name was prefixed; extract original.
-            const real = element.name.replace(/^📋\s*/, '').replace(/\s*\(\d+\s*files\)$/, '');
+            const real = element.collectionName ?? element.name;
             return this._getCollectionTree(real);
         }
         if (element.type === 'notice-folder') {
@@ -82,6 +81,7 @@ export class NoticeTreeProvider implements vscode.TreeDataProvider<NoticeItem> {
             name: `📋 ${n.name} (${n.files.length} files)`,
             type: 'notice-collection',
             description: n.description || `File collection: ${n.name}`,
+            collectionName: n.name,
         });
 
         if (current) {
@@ -165,6 +165,25 @@ export class NoticeTreeProvider implements vscode.TreeDataProvider<NoticeItem> {
             cfg.currentNoticeName = '';
         }
         await this.store.save();
+    }
+
+    async updateNotice(name: string, updates: Partial<WorkspaceNotice>): Promise<void> {
+        const cfg = this.store.config;
+        const idx = cfg.workspaceNotices.findIndex(n => n.name === name);
+        if (idx === -1) {
+            return;
+        }
+        const next = { ...cfg.workspaceNotices[idx], ...updates };
+        cfg.workspaceNotices[idx] = next;
+        // If the collection was renamed and was current, keep the pointer in sync.
+        if (updates.name && updates.name !== name && cfg.currentNoticeName === name) {
+            cfg.currentNoticeName = updates.name;
+        }
+        await this.store.save();
+    }
+
+    getNotice(name: string): WorkspaceNotice | undefined {
+        return this.store.config.workspaceNotices.find(n => n.name === name);
     }
 
     getNotices(): WorkspaceNotice[] {

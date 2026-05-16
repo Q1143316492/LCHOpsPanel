@@ -27,6 +27,9 @@ export const COMMANDS = {
     switchNoticeCollection: 'lchOpsPanel.switchNoticeCollection',
     addNoticeCollection: 'lchOpsPanel.addNoticeCollection',
     manageNoticeCollections: 'lchOpsPanel.manageNoticeCollections',
+    openAllInCollection: 'lchOpsPanel.openAllInCollection',
+    editNoticeCollection: 'lchOpsPanel.editNoticeCollection',
+    saveTabsAsCollection: 'lchOpsPanel.saveTabsAsCollection',
     // Games
     switchGame: 'lchOpsPanel.switchGame',
     resetGame: 'lchOpsPanel.resetGame',

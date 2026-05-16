@@ -3,7 +3,7 @@
   "displayName": "LCH Ops Panel",
   "publisher": "Weylochen",
   "description": "A VS Code extension for managing workspace configurations with custom paths, documents, executable scripts, and commands in a tree view panel",
-  "version": "1.4.3",
+  "version": "1.4.4",
   "icon": "icon.png",
   "repository": {
     "type": "git",
@@ -100,6 +100,21 @@
         "icon": "$(settings-gear)"
       },
       {
+        "command": "lchOpsPanel.openAllInCollection",
+        "title": "Open All Files in Collection",
+        "icon": "$(go-to-file)"
+      },
+      {
+        "command": "lchOpsPanel.editNoticeCollection",
+        "title": "Edit Notice Collection",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "lchOpsPanel.saveTabsAsCollection",
+        "title": "Save Open Tabs as Collection",
+        "icon": "$(save-all)"
+      },
+      {
         "command": "lchOpsPanel.startGame2048",
         "title": "Start 2048 Game",
         "icon": "$(game)"
@@ -158,9 +173,14 @@
           "group": "navigation@2"
         },
         {
-          "command": "lchOpsPanel.manageNoticeCollections",
+          "command": "lchOpsPanel.saveTabsAsCollection",
           "when": "view == lchNoticeCollectionView",
           "group": "navigation@3"
+        },
+        {
+          "command": "lchOpsPanel.manageNoticeCollections",
+          "when": "view == lchNoticeCollectionView",
+          "group": "navigation@4"
         },
         {
           "command": "lchOpsPanel.switchGame",
@@ -183,6 +203,16 @@
           "command": "lchOpsPanel.openFile",
           "when": "view == lchNoticeCollectionView && viewItem == notice-file",
           "group": "1_actions@1"
+        },
+        {
+          "command": "lchOpsPanel.openAllInCollection",
+          "when": "view == lchNoticeCollectionView && viewItem == notice-collection",
+          "group": "1_actions@1"
+        },
+        {
+          "command": "lchOpsPanel.editNoticeCollection",
+          "when": "view == lchNoticeCollectionView && viewItem == notice-collection",
+          "group": "2_manage@1"
         },
         {
           "command": "lchOpsPanel.executeScript",

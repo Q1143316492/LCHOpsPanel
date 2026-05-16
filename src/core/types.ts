@@ -29,6 +29,8 @@ export interface NoticeItem {
     path?: string;
     description?: string;
     children?: NoticeItem[];
+    /** For `notice-collection` nodes: the underlying collection name (without the display prefix). */
+    collectionName?: string;
 }
 
 export interface NoticeFile {
