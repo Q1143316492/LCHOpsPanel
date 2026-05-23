@@ -124,11 +124,15 @@ export class ConfigStore implements vscode.Disposable {
 
 function sanitize(raw: any): OpsConfig {
     const defaults = createEmptyConfig();
+    const rawSegments = raw?.workspaceInfoPathSegments;
     return {
         categories: Array.isArray(raw?.categories) ? raw.categories : defaults.categories,
         items: Array.isArray(raw?.items) ? raw.items : defaults.items,
         workspaceNotices: Array.isArray(raw?.workspaceNotices) ? raw.workspaceNotices : defaults.workspaceNotices,
         currentNoticeName: typeof raw?.currentNoticeName === 'string' ? raw.currentNoticeName : defaults.currentNoticeName,
+        workspaceInfoPathSegments: (typeof rawSegments === 'number' && Number.isInteger(rawSegments) && rawSegments >= 0)
+            ? rawSegments
+            : defaults.workspaceInfoPathSegments,
     };
 }
 

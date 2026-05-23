@@ -3,7 +3,7 @@
   "displayName": "LCH Ops Panel",
   "publisher": "Weylochen",
   "description": "A VS Code extension for managing workspace configurations with custom paths, documents, executable scripts, and commands in a tree view panel",
-  "version": "1.4.4",
+  "version": "1.4.5",
   "icon": "icon.png",
   "repository": {
     "type": "git",
@@ -30,6 +30,11 @@
     "views": {
       "lchOpsPanel": [
         {
+          "id": "lchWorkspaceInfoView",
+          "name": "Workspace Info",
+          "when": "workspaceFolderCount > 0"
+        },
+        {
           "id": "lchOpsPanelView",
           "name": "Operations Panel",
           "when": "workspaceFolderCount > 0"
@@ -48,6 +53,11 @@
       ]
     },
     "commands": [
+      {
+        "command": "lchOpsPanel.refreshWorkspaceInfo",
+        "title": "Refresh Workspace Info",
+        "icon": "$(refresh)"
+      },
       {
         "command": "lchOpsPanel.refresh",
         "title": "Refresh",
@@ -147,6 +157,11 @@
     ],
     "menus": {
       "view/title": [
+        {
+          "command": "lchOpsPanel.refreshWorkspaceInfo",
+          "when": "view == lchWorkspaceInfoView",
+          "group": "navigation@1"
+        },
         {
           "command": "lchOpsPanel.refresh",
           "when": "view == lchOpsPanelView",

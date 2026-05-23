@@ -50,6 +50,8 @@ export interface OpsConfig {
     items: OpsItem[];
     workspaceNotices: WorkspaceNotice[];
     currentNoticeName: string;
+    /** Number of trailing path segments shown in the Workspace Info panel (0 = full path). Default: 3 */
+    workspaceInfoPathSegments: number;
 }
 
 export function createEmptyConfig(): OpsConfig {
@@ -58,6 +60,7 @@ export function createEmptyConfig(): OpsConfig {
         items: [],
         workspaceNotices: [],
         currentNoticeName: '',
+        workspaceInfoPathSegments: 3,
     };
 }
 

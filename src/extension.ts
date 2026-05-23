@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import { ConfigStore } from './core/configStore';
+import { activateWorkspaceInfo } from './features/workspaceInfo';
 import { activateOpsPanel } from './features/opsPanel';
 import { activateNotices } from './features/notices';
 import { activateGames } from './features/games';
@@ -13,6 +14,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     context.subscriptions.push(store);
     await store.initialize();
 
+    activateWorkspaceInfo(context, store);
     activateOpsPanel(context, store);
     activateNotices(context, store);
     activateGames(context);

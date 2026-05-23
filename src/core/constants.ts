@@ -6,6 +6,7 @@
 export const CONFIG_FILE_NAME = '.lch-ops-panel.json';
 
 export const VIEW_IDS = {
+    workspaceInfo: 'lchWorkspaceInfoView',
     opsPanel: 'lchOpsPanelView',
     noticeCollection: 'lchNoticeCollectionView',
     gamesPanel: 'lchGamesPanelView',
@@ -13,6 +14,8 @@ export const VIEW_IDS = {
 } as const;
 
 export const COMMANDS = {
+    // Workspace info
+    refreshWorkspaceInfo: 'lchOpsPanel.refreshWorkspaceInfo',
     // Ops panel
     refresh: 'lchOpsPanel.refresh',
     addItem: 'lchOpsPanel.addItem',
