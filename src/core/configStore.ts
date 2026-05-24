@@ -103,6 +103,32 @@ export class ConfigStore implements vscode.Disposable {
         await fs.writeFile(file, JSON.stringify(this._config, null, 2), 'utf8');
     }
 
+    /**
+     * Merge only the specified fields into the JSON file on disk, leaving all
+     * other fields (including unknown ones) untouched and in their original order.
+     * Also keeps the in-memory config in sync.
+     */
+    async savePartial(patch: Partial<OpsConfig>): Promise<void> {
+        if (!this._workspaceRoot) {
+            return;
+        }
+        // Sync in-memory first so consumers see the change immediately.
+        Object.assign(this._config, patch);
+
+        const file = path.join(this._workspaceRoot, CONFIG_FILE_NAME);
+        let raw: Record<string, unknown> = {};
+        try {
+            const content = await fs.readFile(file, 'utf8');
+            if (content.trim()) {
+                raw = JSON.parse(content) as Record<string, unknown>;
+            }
+        } catch {
+            // File missing or corrupt — will be created fresh.
+        }
+        Object.assign(raw, patch);
+        await fs.writeFile(file, JSON.stringify(raw, null, 2), 'utf8');
+    }
+
     get config(): OpsConfig {
         return this._config;
     }
@@ -133,6 +159,7 @@ function sanitize(raw: any): OpsConfig {
         workspaceInfoPathSegments: (typeof rawSegments === 'number' && Number.isInteger(rawSegments) && rawSegments >= 0)
             ? rawSegments
             : defaults.workspaceInfoPathSegments,
+        notes: Array.isArray(raw?.notes) ? (raw.notes as unknown[]).filter(l => typeof l === 'string') as string[] : defaults.notes,
     };
 }
 

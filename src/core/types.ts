@@ -52,6 +52,8 @@ export interface OpsConfig {
     currentNoticeName: string;
     /** Number of trailing path segments shown in the Workspace Info panel (0 = full path). Default: 3 */
     workspaceInfoPathSegments: number;
+    /** Lines of free-form memo text stored per-line in the array. */
+    notes: string[];
 }
 
 export function createEmptyConfig(): OpsConfig {
@@ -61,6 +63,7 @@ export function createEmptyConfig(): OpsConfig {
         workspaceNotices: [],
         currentNoticeName: '',
         workspaceInfoPathSegments: 3,
+        notes: [],
     };
 }
 

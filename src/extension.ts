@@ -5,6 +5,7 @@ import { activateOpsPanel } from './features/opsPanel';
 import { activateNotices } from './features/notices';
 import { activateGames } from './features/games';
 import { activateJsonEditor } from './features/jsonEditor';
+import { activateNotesMemo } from './features/notesMemo';
 
 /**
  * Extension entry point. Composes feature modules; holds no business logic.
@@ -17,6 +18,7 @@ export async function activate(context: vscode.ExtensionContext): Promise<void> 
     activateWorkspaceInfo(context, store);
     activateOpsPanel(context, store);
     activateNotices(context, store);
+    activateNotesMemo(context, store);
     activateGames(context);
     activateJsonEditor(context);
 

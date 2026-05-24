@@ -49,6 +49,12 @@
           "name": "Mini Games",
           "type": "webview",
           "when": "workspaceFolderCount > 0"
+        },
+        {
+          "id": "lchNotesMemoView",
+          "name": "Notes Memo",
+          "type": "webview",
+          "when": "workspaceFolderCount > 0"
         }
       ]
     },
@@ -153,6 +159,16 @@
         "command": "lchOpsPanel.openJsonEditor",
         "title": "Open JSON Tree Editor",
         "icon": "$(symbol-structure)"
+      },
+      {
+        "command": "lchOpsPanel.saveNotesMemo",
+        "title": "Save Notes",
+        "icon": "$(save)"
+      },
+      {
+        "command": "lchOpsPanel.clearNotesMemo",
+        "title": "Clear Notes",
+        "icon": "$(clear-all)"
       }
     ],
     "menus": {
@@ -205,6 +221,16 @@
         {
           "command": "lchOpsPanel.resetGame",
           "when": "view == lchGamesPanelView",
+          "group": "navigation@2"
+        },
+        {
+          "command": "lchOpsPanel.saveNotesMemo",
+          "when": "view == lchNotesMemoView",
+          "group": "navigation@1"
+        },
+        {
+          "command": "lchOpsPanel.clearNotesMemo",
+          "when": "view == lchNotesMemoView",
           "group": "navigation@2"
         }
       ],

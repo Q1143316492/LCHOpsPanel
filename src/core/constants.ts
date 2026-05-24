@@ -11,6 +11,7 @@ export const VIEW_IDS = {
     noticeCollection: 'lchNoticeCollectionView',
     gamesPanel: 'lchGamesPanelView',
     jsonTreeEditor: 'lchOpsPanel.jsonTreeEditor',
+    notesMemo: 'lchNotesMemoView',
 } as const;
 
 export const COMMANDS = {
@@ -40,4 +41,7 @@ export const COMMANDS = {
     startGameMinesweeper: 'lchOpsPanel.startGameMinesweeper',
     // JSON editor
     openJsonEditor: 'lchOpsPanel.openJsonEditor',
+    // Notes memo
+    saveNotesMemo: 'lchOpsPanel.saveNotesMemo',
+    clearNotesMemo: 'lchOpsPanel.clearNotesMemo',
 } as const;

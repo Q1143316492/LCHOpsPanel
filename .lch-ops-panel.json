@@ -101,5 +101,8 @@
       ]
     }
   ],
-  "currentNoticeName": "Core Source"
+  "currentNoticeName": "Core Source",
+  "notes": [
+    "Hello World"
+  ]
 }
