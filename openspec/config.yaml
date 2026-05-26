@@ -1,0 +1,42 @@
+schema: spec-driven
+
+context: |
+  ## Project: LCHOpsPanel
+  A VS Code extension (TypeScript) that provides a sidebar panel for managing workspace-specific shortcuts, scripts, commands, and file collections.
+
+  ## Tech Stack
+  - Language: TypeScript, compiled via webpack
+  - Runtime: VS Code Extension API (^1.100.0)
+  - Config persistence: `.lch-ops-panel.json` per workspace root (JSON)
+  - UI: VS Code TreeView, WebviewView, CustomTextEditor
+
+  ## Architecture Patterns
+  - **Feature activation pattern**: each feature exports an `activate<Feature>(context, store?)` function called from `extension.ts`. No feature registers itself.
+  - **ConfigStore as single source of truth**: all persistent state flows through `ConfigStore`. Features subscribe to `store.onDidChange()` to re-render; they never maintain their own file watchers.
+  - **Pure rendering providers**: TreeDataProviders do no I/O. Mutations go through `store.save()` or `store.savePartial()`.
+  - **terminalRunner utilities**: path resolution and terminal spawning are shared utilities, not per-feature.
+  - **Webview features (games, notesMemo)**: use WebviewViewProvider with `retainContextWhenHidden: true`.
+  - **Custom editor (jsonEditor)**: uses CustomTextEditorProvider registered as `priority: option`.
+
+  ## Domain Model (OpsConfig — stored in .lch-ops-panel.json)
+  - `categories: string[]` — ordered list of category names for the ops panel
+  - `items: OpsItem[]` — flat list of file/script/command items, each with optional `category`
+  - `workspaceNotices: WorkspaceNotice[]` — named collections of files (notice system)
+  - `currentNoticeName: string` — which notice collection is currently active (empty = show all)
+  - `workspaceInfoPathSegments: number` — how many path segments to show (0 = full path)
+  - `notes: string[]` — memo lines stored per-line
+
+  ## Key Conventions
+  - Item IDs are random alphanumeric strings (Math.random().toString(36))
+  - Script execution: `.py`→python, `.js`→node, `.ps1`→powershell, `.bat/.cmd`→direct, `.sh`→bash
+  - Relative paths in items are resolved against `workspaceFolders[0].uri.fsPath`
+  - Notice file paths use `./` prefix and `/` separators for virtual folder hierarchy
+  - Nonces are required for all inline scripts in webviews (CSP compliance)
+
+rules:
+  proposal:
+    - Always include a "Non-goals" section
+    - Reference affected specs by name (e.g., "see specs/ops-panel/spec.md")
+  tasks:
+    - Break tasks into chunks of max 2 hours
+    - Reference the spec that defines the behavior being implemented

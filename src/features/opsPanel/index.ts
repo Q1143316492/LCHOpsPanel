@@ -40,14 +40,14 @@ export function activateOpsPanel(
             }
             runCommandInTerminal(item.name, item.command);
         }),
-        vscode.commands.registerCommand(COMMANDS.openConfigFile, () => openConfigFile()),
+        vscode.commands.registerCommand(COMMANDS.openConfigFile, () => openConfigFile(store)),
     );
 
     return provider;
 }
 
-async function openConfigFile(): Promise<void> {
-    const root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+async function openConfigFile(store: ConfigStore): Promise<void> {
+    const root = store.workspaceRoot;
     if (!root) {
         vscode.window.showInformationMessage('No workspace folder is open.');
         return;

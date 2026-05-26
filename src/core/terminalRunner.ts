@@ -2,6 +2,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import { PathBearing } from './types';
+import { resolveWorkspaceRoot } from './configStore';
 
 /**
  * Resolve an item path to an absolute file path on disk.
@@ -11,7 +12,7 @@ export function resolvePath(itemPath: string): string | undefined {
     if (path.isAbsolute(itemPath)) {
         return itemPath;
     }
-    const root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+    const root = resolveWorkspaceRoot();
     return root ? path.join(root, itemPath) : undefined;
 }
 
@@ -98,7 +99,7 @@ export function runScriptInTerminal(item: PathBearing): void {
 export function runCommandInTerminal(name: string, command: string): void {
     try {
         const terminal = vscode.window.createTerminal(`LCH Ops: ${name}`);
-        const root = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+        const root = resolveWorkspaceRoot();
         if (root) {
             terminal.sendText(`cd "${root}"`);
         }

@@ -35,8 +35,17 @@ export class ConfigStore implements vscode.Disposable {
         await this.updateWorkspaceRoot();
     }
 
+    /**
+     * Resolve the config root directory.
+     * - If a `.code-workspace` file is open (multi-root workspace), use its parent directory.
+     * - Otherwise fall back to the first workspace folder (single-folder workspace).
+     */
+    private _resolveRoot(): string | undefined {
+        return resolveWorkspaceRoot();
+    }
+
     private async updateWorkspaceRoot(): Promise<void> {
-        const next = vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
+        const next = this._resolveRoot();
         if (this._workspaceRoot === next) {
             return;
         }
@@ -56,10 +65,11 @@ export class ConfigStore implements vscode.Disposable {
     }
 
     private _setupWatcher(): void {
-        if (!this._workspaceRoot) {
+        const root = this._resolveRoot();
+        if (!root) {
             return;
         }
-        const file = path.join(this._workspaceRoot, CONFIG_FILE_NAME);
+        const file = path.join(root, CONFIG_FILE_NAME);
         const watcher = vscode.workspace.createFileSystemWatcher(file);
         const trigger = () => void this.reload().then(() => this._onDidChange.fire());
         watcher.onDidChange(trigger);
@@ -165,4 +175,17 @@ function sanitize(raw: any): OpsConfig {
 
 export function generateId(): string {
     return Math.random().toString(36).slice(2, 11);
+}
+
+/**
+ * Resolve the effective workspace root:
+ * - Multi-root workspace: parent directory of the `.code-workspace` file.
+ * - Single-folder workspace: the first (and only) workspace folder.
+ */
+export function resolveWorkspaceRoot(): string | undefined {
+    const wsFile = vscode.workspace.workspaceFile;
+    if (wsFile && wsFile.scheme === 'file') {
+        return path.dirname(wsFile.fsPath);
+    }
+    return vscode.workspace.workspaceFolders?.[0]?.uri.fsPath;
 }
